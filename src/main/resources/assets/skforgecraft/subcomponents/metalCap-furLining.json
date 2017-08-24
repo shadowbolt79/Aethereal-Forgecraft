@@ -1,0 +1,67 @@
+{
+  "name": "furLining",
+  "maintex": "skforgecraft:items/armor/helmet/subcomponents/metalCap-furLining0",
+  "highlight": "skforgecraft:items/armor/helmet/subcomponents/metalCap-furLining1",
+  "shadows": "skforgecrat:items/armor/helmet/subcomponents/metalCap-furLining2",
+  "materialtype": "FUR",
+  "cost": "2",
+  "slot": "PADDING",
+  "layer": "1",
+  "textures": {
+    "1": "skforgecraft:components/carved_helmet_2_base",
+    "2": "skforgecraft:components/carved_helmet_1_base",
+    "4": "skforgecraft:components/crystal_socket"
+  },
+  "highlight-textures": {
+    "1": "skforgecraft:components/carved_helmet_2_highlight",
+    "2": "skforgecraft:components/carved_helmet_1_highlight"
+  },
+  "shadow-textures": {
+    "2": "skforgecraft:components/carved_helmet_1_shadow"
+  },
+  "elements": [
+    {
+      "name": "FurLining",
+      "from": [ 3.7999999970197678, 24.200000002980232, 3.7999999970197678 ],
+      "to": [ 4.799999997019768, 32.20000000298023, 9.799999997019768 ],
+      "faces": {
+        "north": { "texture": "#1", "uv": [ 15.0, 8.0, 16.0, 16.0 ] },
+        "east": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 16.0 ] },
+        "south": { "texture": "#1", "uv": [ 10.0, 8.0, 11.0, 16.0 ] },
+        "west": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 16.0 ] },
+        "down": { "texture": "#1", "uv": [ 10.0, 15.0, 16.0, 16.0 ], "rotation": 90 }
+      }
+    },
+    {
+      "name": "FurLining",
+      "from": [ 11.200000002980232, 24.200000002980232, 3.7999999970197678 ],
+      "to": [ 12.200000002980232, 32.20000000298023, 9.799999997019768 ],
+      "faces": {
+        "north": { "texture": "#1", "uv": [ 15.0, 8.0, 16.0, 16.0 ] },
+        "east": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 16.0 ] },
+        "south": { "texture": "#1", "uv": [ 10.0, 8.0, 11.0, 16.0 ] },
+        "west": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 16.0 ] },
+        "down": { "texture": "#1", "uv": [ 10.0, 15.0, 16.0, 16.0 ] }
+      }
+    },
+    {
+      "name": "FurLining",
+      "from": [ 4.799999997019768, 24.200000002980232, 3.7999999970197678 ],
+      "to": [ 11.200000002980232, 32.20000000298023, 4.799999997019768 ],
+      "faces": {
+        "north": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 16.0 ] },
+        "south": { "texture": "#1", "uv": [ 10.0, 8.0, 16.00000000596046, 16.0 ] },
+        "down": { "texture": "#1", "uv": [ 10.0, 15.0, 16.0, 16.0 ] }
+      }
+    },
+    {
+      "name": "FurLining",
+      "from": [ 4.799999997019768, 31.200000002980232, 3.7999999970197678 ],
+      "to": [ 11.200000002980232, 32.20000000298023, 10.799999997019768 ],
+      "faces": {
+        "south": { "texture": "#1", "uv": [ 10.0, 8.0, 16.00000000596046, 9.0 ] },
+        "down": { "texture": "#1", "uv": [ 10.0, 8.0, 16.0, 15.0 ] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "skForgecraft",
+  "name": "Etherial Forgecraft",
+  "description": "True crafting of armor and weapons.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["shadowking97"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

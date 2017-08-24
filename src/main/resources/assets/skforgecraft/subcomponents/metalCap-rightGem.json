@@ -1,0 +1,33 @@
+{
+  "name": "rightGem",
+  "maintex": "items/armor/helmet/metalCap0",
+  "highlight": "items/armor/helmet/metalCap1",
+  "materialtype": "CRYSTAL",
+  "cost": "1",
+  "slot": "GEM1",
+  "layer": "2",
+  "textures": {
+    "1": "skforgecraft:components/carved_helmet_2_base",
+    "2": "skforgecraft:components/carved_helmet_1_base",
+    "4": "skforgecraft:components/crystal_socket"
+  },
+  "highlight-textures": {
+    "1": "skforgecraft:components/carved_helmet_2_highlight",
+    "2": "skforgecraft:components/carved_helmet_1_highlight"
+  },
+  "shadow-textures": {
+    "2": "skforgecraft:components/carved_helmet_1_shadow"
+  },
+  "elements": [
+    {
+      "name": "GemRight",
+      "from": [ 3.2000000029802322, 31.799999997019768, 9.0 ],
+      "to": [ 3.4999999925494194, 32.49999999254942, 10.50000000745058 ],
+      "faces": {
+        "south": { "texture": "#4", "uv": [ 2.0, 0.0, 2.299999989569187, 0.6999999955296516 ] },
+        "west": { "texture": "#4", "uv": [ 0.0, 0.0, 1.5000000074505806, 0.6999999955296516 ] },
+        "down": { "texture": "#4", "uv": [ 1.2999999999999994, 1.0, 0.39999998956918736, 1.3000000074505804 ], "rotation": 90 }
+      }
+    }
+  ]
+}

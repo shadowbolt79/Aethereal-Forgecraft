@@ -1,0 +1,67 @@
+{
+  "name": "sockets",
+  "maintex": "skforgecraft:items/armor/helmet/subcomponents/metalCap-trim0",
+  "shadows": "skforgecrat:items/armor/helmet/subcomponents/metalCap-trim2",
+  "materialtype": "METAL",
+  "cost": "3",
+  "slot": "SOCKET",
+  "layer": "2",
+  "textures": {
+    "1": "skforgecraft:components/carved_helmet_2_base",
+    "2": "skforgecraft:components/carved_helmet_1_base",
+    "4": "skforgecraft:components/crystal_socket"
+  },
+  "highlight-textures": {
+    "1": "skforgecraft:components/carved_helmet_2_highlight",
+    "2": "skforgecraft:components/carved_helmet_1_highlight"
+  },
+  "shadow-textures": {
+    "2": "skforgecraft:components/carved_helmet_1_shadow"
+  },
+  "elements": [
+    {
+      "name": "GemSocket",
+      "from": [ 11.49999999254942, 32.49999999254942, 8.0 ],
+      "to": [ 13.000000014901161, 33.49999999254942, 11.000000014901161 ],
+      "faces": {
+        "north": { "texture": "#2", "uv": [ 6.0, 7.0, 7.500000022351742, 8.0 ] },
+        "east": { "texture": "#2", "uv": [ 9.0, 7.0, 6.000000014901161, 8.0 ] },
+        "south": { "texture": "#1", "uv": [ 9.499999999999998, 7.0, 11.00000002235174, 8.0 ] },
+        "up": { "texture": "#1", "uv": [ 9.499999999999998, 5.0, 11.00000002235174, 8.000000014901161 ] },
+        "down": { "texture": "#2", "uv": [ 13.0, 7.0, 14.500000022351742, 10.000000014901161 ] }
+      }
+    },
+    {
+      "name": "GemSocket",
+      "from": [ 3.0, 32.49999999254942, 8.0 ],
+      "to": [ 4.500000022351742, 33.49999999254942, 11.000000014901161 ],
+      "faces": {
+        "north": { "texture": "#2", "uv": [ 6.5, 7.0, 8.000000022351742, 8.0 ] },
+        "south": { "texture": "#1", "uv": [ 0.0, 7.0, 1.5000000223517418, 8.0 ] },
+        "west": { "texture": "#2", "uv": [ 6.0, 7.0, 9.000000014901161, 8.0 ] },
+        "up": { "texture": "#1", "uv": [ 0.0, 5.0, 1.5000000223517418, 8.000000014901161 ] },
+        "down": { "texture": "#2", "uv": [ 13.0, 7.0, 14.500000022351742, 10.000000014901161 ] }
+      }
+    },
+    {
+      "name": "GemSocket",
+      "from": [ 3.0, 31.49999999254942, 8.0 ],
+      "to": [ 4.500000022351742, 32.49999999254942, 9.000000014901161 ],
+      "faces": {
+        "north": { "texture": "#2", "uv": [ 4.0, 8.0, 5.500000022351742, 9.0 ] },
+        "south": { "texture": "#2", "uv": [ 7.0, 8.0, 8.500000022351742, 9.0 ] },
+        "west": { "texture": "#2", "uv": [ 6.0, 9.0, 7.000000014901161, 10.0 ] }
+      }
+    },
+    {
+      "name": "GemSocket",
+      "from": [ 11.49999999254942, 31.49999999254942, 8.0 ],
+      "to": [ 13.000000014901161, 32.49999999254942, 9.000000014901161 ],
+      "faces": {
+        "north": { "texture": "#2", "uv": [ 5.0, 7.0, 6.500000022351742, 8.0 ] },
+        "east": { "texture": "#2", "uv": [ 5.0, 8.0, 6.000000014901161, 9.0 ] },
+        "south": { "texture": "#2", "uv": [ 6.0, 8.0, 7.500000022351742, 9.0 ] }
+      }
+    }
+  ]
+}
