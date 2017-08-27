@@ -27,7 +27,7 @@ public class ModRecipies {
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.hammer),"@#@"," & ",'#',"ingotIron",'@',"nuggetIron",'&',"stickWood"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.anvil),"%#%"," & ",'#',new ItemStack(Blocks.IRON_BLOCK),'&',"logWood",'%',new ItemStack(Items.IRON_INGOT)));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.tongs), "X X"," X ","x x",'X',"ingotIron",'x',"nuggetIron"));
-
+        
         //Colored recipies
         for(int i = 0; i < 16; i++)
         {
