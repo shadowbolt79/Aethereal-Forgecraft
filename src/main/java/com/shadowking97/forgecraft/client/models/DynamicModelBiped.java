@@ -6,6 +6,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.List;
 public class DynamicModelBiped extends ModelBiped {
     private List<ModelRenderer> componentBody;
     private List<ModelRenderer> componentHead;
-    private List<ModelRenderer> componentHeadwear;
     private List<ModelRenderer> componentLeftArm;
     private List<ModelRenderer> componentRightArm;
     private List<ModelRenderer> componentLeftLeg;
@@ -74,6 +74,8 @@ public class DynamicModelBiped extends ModelBiped {
     public void addChild(ModelRenderer bodyPart, ModelRenderer child) {
         if(bodyPart==null||child==null)return;
 
+
+
         if(bodyPart==this.bipedBody){
             bipedBody.addChild(child);
             if(componentBody==null)componentBody=new ArrayList<>();
@@ -83,11 +85,6 @@ public class DynamicModelBiped extends ModelBiped {
             bipedHead.addChild(child);
             if(componentHead==null)componentHead=new ArrayList<>();
             componentHead.add(child);
-        }
-        else if(bodyPart==this.bipedHeadwear){
-            bipedHeadwear.addChild(child);
-            if(componentHeadwear==null)componentHeadwear=new ArrayList<>();
-            componentHeadwear.add(child);
         }
         else if(bodyPart==this.bipedLeftArm){
             bipedLeftArm.addChild(child);
@@ -113,26 +110,29 @@ public class DynamicModelBiped extends ModelBiped {
 
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if(entityIn instanceof EntityArmorStand)
+        {
+            netHeadYaw=0;
+        }
+
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
         GlStateManager.pushMatrix();
 
         if (this.isChild)
         {
-            float f = 2.0F;
             GlStateManager.scale(0.75F, 0.75F, 0.75F);
             GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
-            //this.bipedHead.render(scale);
-
+            renderChildren(this.bipedHead,scale);
             GlStateManager.popMatrix();
             GlStateManager.pushMatrix();
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
             GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
-            //this.bipedBody.render(scale);
-            //this.bipedRightArm.render(scale);
-            //this.bipedLeftArm.render(scale);
-            //this.bipedRightLeg.render(scale);
-            //this.bipedLeftLeg.render(scale);
-            //this.bipedHeadwear.render(scale);
+            renderChildren(this.bipedBody,scale);
+            renderChildren(this.bipedRightArm,scale);
+            renderChildren(this.bipedLeftArm,scale);
+            renderChildren(this.bipedRightLeg,scale);
+            renderChildren(this.bipedLeftLeg,scale);
+            renderChildren(this.bipedBody,scale);
         }
         else
         {
@@ -141,16 +141,75 @@ public class DynamicModelBiped extends ModelBiped {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
             }
 
-            //this.bipedHead.render(scale);
-            //this.bipedBody.render(scale);
-            //this.bipedRightArm.render(scale);
-            //this.bipedLeftArm.render(scale);
-            //this.bipedRightLeg.render(scale);
-            //this.bipedLeftLeg.render(scale);
-            //this.bipedHeadwear.render(scale);
+            renderChildren(this.bipedHead,scale);
+            renderChildren(this.bipedBody,scale);
+            renderChildren(this.bipedRightArm,scale);
+            renderChildren(this.bipedLeftArm,scale);
+            renderChildren(this.bipedRightLeg,scale);
+            renderChildren(this.bipedLeftLeg,scale);
+            renderChildren(this.bipedBody,scale);
         }
 
         GlStateManager.popMatrix();
+    }
+
+    /***
+     * Renders the ModelRenderer's children without rendering the model itself.
+     *
+     * Yes, I'm cheating.
+     * @param renderer
+     * @param scale
+     */
+    public void renderChildren(ModelRenderer renderer, float scale) {
+        if(renderer.childModels==null||renderer.childModels.size()==0)
+            return;
+        if (!renderer.isHidden) {
+            if (renderer.showModel) {
+                GlStateManager.translate(renderer.offsetX, renderer.offsetY, renderer.offsetZ);
+
+                if (renderer.rotateAngleX == 0.0F && renderer.rotateAngleY == 0.0F && renderer.rotateAngleZ == 0.0F) {
+                    if (renderer.rotationPointX == 0.0F && renderer.rotationPointY == 0.0F && renderer.rotationPointZ == 0.0F) {
+
+                        for (int k = 0; k < renderer.childModels.size(); ++k) {
+                            (renderer.childModels.get(k)).render(scale);
+                        }
+
+                    } else {
+                        GlStateManager.translate(renderer.rotationPointX * scale, renderer.rotationPointY * scale, renderer.rotationPointZ * scale);
+
+                        for (int j = 0; j < renderer.childModels.size(); ++j) {
+                            (renderer.childModels.get(j)).render(scale);
+
+                        }
+
+                        GlStateManager.translate(-renderer.rotationPointX * scale, -renderer.rotationPointY * scale, -renderer.rotationPointZ * scale);
+                    }
+                } else {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(renderer.rotationPointX * scale, renderer.rotationPointY * scale, renderer.rotationPointZ * scale);
+
+                    if (renderer.rotateAngleZ != 0.0F) {
+                        GlStateManager.rotate(renderer.rotateAngleZ * (180F / (float) Math.PI), 0.0F, 0.0F, 1.0F);
+                    }
+
+                    if (renderer.rotateAngleY != 0.0F) {
+                        GlStateManager.rotate(renderer.rotateAngleY * (180F / (float) Math.PI), 0.0F, 1.0F, 0.0F);
+                    }
+
+                    if (renderer.rotateAngleX != 0.0F) {
+                        GlStateManager.rotate(renderer.rotateAngleX * (180F / (float) Math.PI), 1.0F, 0.0F, 0.0F);
+                    }
+
+                    for (int i = 0; i < renderer.childModels.size(); ++i) {
+                        (renderer.childModels.get(i)).render(scale);
+                    }
+
+                    GlStateManager.popMatrix();
+                }
+
+                GlStateManager.translate(-renderer.offsetX, -renderer.offsetY, -renderer.offsetZ);
+            }
+        }
     }
 
     /**
@@ -163,8 +222,6 @@ public class DynamicModelBiped extends ModelBiped {
         addChildren(bipedBody,componentBody);
         bipedHead.childModels.clear();
         addChildren(bipedHead,componentHead);
-        bipedHeadwear.childModels.clear();
-        addChildren(bipedHeadwear,componentHeadwear);
         bipedLeftArm.childModels.clear();
         addChildren(bipedLeftArm,componentLeftArm);
         bipedRightArm.childModels.clear();

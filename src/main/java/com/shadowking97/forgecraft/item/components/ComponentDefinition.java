@@ -1,6 +1,6 @@
 package com.shadowking97.forgecraft.item.components;
 
-import com.google.common.collect.ImmutableList;
+import com.shadowking97.forgecraft.capabilities.ArmorCapabilityProvider;
 import com.shadowking97.forgecraft.client.models.ComponentModel;
 import com.shadowking97.forgecraft.client.models.ComponentModelRenderer;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
@@ -26,6 +26,8 @@ public class ComponentDefinition {
 
     private final boolean subComponent;
 
+    private ArmorCapabilityProvider.ModelPart part;
+
     @SideOnly(Side.CLIENT)
     private ResourceLocation baseTexture;
     @SideOnly(Side.CLIENT)
@@ -41,10 +43,11 @@ public class ComponentDefinition {
     private static final ModelBase dummyBase = new ModelBase() {
         @Override
         public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
-
     };
 
     private final int renderLayer;
+
+    public String getName(){return componentName;}
 
     public ComponentDefinition(String componentName, ComponentGenerator.ComponentSlot slot, ItemMaterial.MaterialType type, int materialAmount, HashMap<String,ComponentDefinition> availableSubComponents, int renderLayer, boolean isSubComponent)
     {
@@ -55,6 +58,30 @@ public class ComponentDefinition {
         this.availableSubComponents = availableSubComponents;
         this.subComponent=isSubComponent;
         this.renderLayer=renderLayer;
+
+        switch (slot)
+        {
+            case HELMET_CAP:
+            case HELMET_MASK:
+                part = ArmorCapabilityProvider.ModelPart.BIPED_HEAD;
+                if(availableSubComponents!=null)
+                    for(ComponentDefinition subcomp: availableSubComponents.values())
+                        subcomp.setPart(ArmorCapabilityProvider.ModelPart.BIPED_HEAD);
+                break;
+        }
+    }
+
+    private void setPart(ArmorCapabilityProvider.ModelPart part)
+    {
+        this.part = part;
+        if(availableSubComponents!=null)
+            for(ComponentDefinition subcomp: availableSubComponents.values())
+                subcomp.setPart(part);
+    }
+
+    public ArmorCapabilityProvider.ModelPart getPart()
+    {
+        return part;
     }
 
     public ComponentDefinition getSubComponent(String name)
