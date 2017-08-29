@@ -24,11 +24,6 @@ public class TestArmorHelmet extends ItemBaseArmor {
     }
 
     @Override
-    public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
-        return armorType==EntityEquipmentSlot.HEAD;
-    }
-
-    @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
         ArmorCapabilityProvider.Provider provider = new ArmorCapabilityProvider.Provider();
         provider.deserializeNBT(nbt);

@@ -177,7 +177,6 @@ public class ArmorCapabilityProvider{
 
                     if (renderer != null)
                         model.addSubcomponent(renderer, componentDefinition.getMaterialModel(componentMaterial));
-
             }
 
             if(subComponents!=null) {
