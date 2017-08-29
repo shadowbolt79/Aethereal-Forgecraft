@@ -1,5 +1,6 @@
 package com.shadowking97.forgecraft.capabilities;
 
+import com.shadowking97.forgecraft.client.models.DynamicModelBiped;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -15,4 +16,6 @@ public interface IArmorCapability extends INBTSerializable<NBTTagCompound> {
     void setDirty();
 
     ModelBiped getModel(ModelBiped defaultModel);
+
+    void addSubcomponentModels(DynamicModelBiped biped);
 }

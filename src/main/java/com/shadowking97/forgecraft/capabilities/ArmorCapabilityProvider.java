@@ -81,52 +81,59 @@ public class ArmorCapabilityProvider{
 
         @Override
         public ModelBiped getModel(ModelBiped defaultModel) {
+            //Should only ever be called on the highest level armor model
+            //meaning only one instance of theModel should be created
+            //the others should only be instances of components, added on during
+            //remodels
             if(theModel==null) {
                 theModel = new DynamicModelBiped();
 
                 if(componentDefinition!=null&&componentMaterial!=null)
                 {
-                    ModelRenderer renderer = null;
+                        ModelRenderer renderer = null;
 
-                    switch(componentDefinition.getPart())
-                    {
-                        case BIPED_HEAD:
-                            renderer = theModel.bipedHead;
-                            break;
-                        case BIPED_CHEST:
-                            renderer = theModel.bipedBody;
-                            break;
-                        case BIPED_ARM_LEFT:
-                            renderer = theModel.bipedLeftArm;
-                            break;
-                        case BIPED_ARM_RIGHT:
-                            renderer = theModel.bipedRightArm;
-                            break;
-                        case BIPED_LEG_LEFT:
-                            renderer = theModel.bipedLeftLeg;
-                            break;
-                        case BIPED_LEG_RIGHT:
-                            renderer = theModel.bipedRightLeg;
-                    }
+                        switch (componentDefinition.getPart()) {
+                            case BIPED_HEAD:
+                                renderer = theModel.bipedHead;
+                                break;
+                            case BIPED_CHEST:
+                                renderer = theModel.bipedBody;
+                                break;
+                            case BIPED_ARM_LEFT:
+                                renderer = theModel.bipedLeftArm;
+                                break;
+                            case BIPED_ARM_RIGHT:
+                                renderer = theModel.bipedRightArm;
+                                break;
+                            case BIPED_LEG_LEFT:
+                                renderer = theModel.bipedLeftLeg;
+                                break;
+                            case BIPED_LEG_RIGHT:
+                                renderer = theModel.bipedRightLeg;
+                        }
 
-                    if(renderer!=null)
-                        theModel.addChild(renderer,componentDefinition.getMaterialModel(componentMaterial).copyOf(theModel));
+                        if (renderer != null)
+                            theModel.addChild(renderer, componentDefinition.getMaterialModel(componentMaterial));
+
                 }
             }
 
             if(needsRemodel)
             {
                 needsRemodel=false;
+
+                //reset the model
                 theModel.resetModel();
 
-                for(ItemStack subComponent: subComponents)
-                {
-                    if(subComponent.getItemDamage()>=subComponent.getMaxDamage())continue;
+                //add all applicable subcomponents
+                if(subComponents!=null) {
+                    for (ItemStack subComponent : subComponents) {
+                        if (subComponent.getItemDamage() >= subComponent.getMaxDamage()) continue;
 
-                    IArmorCapability cap = subComponent.getCapability(ARMOR_CAPABILITY,EnumFacing.WEST);
-                    if(cap!=null)
-                    {
-                        theModel.combineWith(cap.getModel(null));
+                        IArmorCapability cap = subComponent.getCapability(ARMOR_CAPABILITY, EnumFacing.WEST);
+                        if (cap != null) {
+                            cap.addSubcomponentModels(theModel);
+                        }
                     }
                 }
             }
@@ -142,12 +149,60 @@ public class ArmorCapabilityProvider{
         }
 
         @Override
+        public void addSubcomponentModels(DynamicModelBiped model)
+        {
+            if(componentDefinition!=null&&componentMaterial!=null)
+            {
+                    ModelRenderer renderer = null;
+
+                    switch (componentDefinition.getPart()) {
+                        case BIPED_HEAD:
+                            renderer = model.bipedHead;
+                            break;
+                        case BIPED_CHEST:
+                            renderer = model.bipedBody;
+                            break;
+                        case BIPED_ARM_LEFT:
+                            renderer = model.bipedLeftArm;
+                            break;
+                        case BIPED_ARM_RIGHT:
+                            renderer = model.bipedRightArm;
+                            break;
+                        case BIPED_LEG_LEFT:
+                            renderer = model.bipedLeftLeg;
+                            break;
+                        case BIPED_LEG_RIGHT:
+                            renderer = model.bipedRightLeg;
+                    }
+
+                    if (renderer != null)
+                        model.addSubcomponent(renderer, componentDefinition.getMaterialModel(componentMaterial));
+
+            }
+
+            if(subComponents!=null) {
+                for (ItemStack subComponent : subComponents) {
+                    if (subComponent.getItemDamage() >= subComponent.getMaxDamage()) continue;
+
+                    IArmorCapability cap = subComponent.getCapability(ARMOR_CAPABILITY, EnumFacing.WEST);
+                    if (cap != null) {
+                        cap.addSubcomponentModels(model);
+                    }
+                }
+            }
+        }
+
+
+        @Override
         public NBTTagCompound serializeNBT() {
             NBTTagCompound compound = new NBTTagCompound();
             dirty=false;
 
-            compound.setString("component",componentDefinition.getName());
-            compound.setString("material",componentMaterial.getName());
+            if(componentMaterial!=null&&componentDefinition!=null)
+            {
+                    compound.setString("component", componentDefinition.getName());
+                    compound.setString("material", componentMaterial.getName());
+            }
 
             if(subComponents!=null) {
                 for (int i = 0; i < subComponents.size(); i++) {
@@ -169,8 +224,13 @@ public class ArmorCapabilityProvider{
                 return;
             }
             int i = 0;
-            componentDefinition = ComponentGenerator.INSTANCE.getComponent(nbt.getString("component"));
-            componentMaterial = MaterialStore.INSTANCE.getMaterialByName(nbt.getString("material"));
+
+
+            if(nbt.hasKey("component"))
+            {
+                    componentDefinition =(ComponentGenerator.INSTANCE.getComponent(nbt.getString("component"+i)));
+                    componentMaterial =(MaterialStore.INSTANCE.getMaterialByName(nbt.getString("material"+i)));
+            }
 
             while(nbt.hasKey("subComponent"+(i)))
             {

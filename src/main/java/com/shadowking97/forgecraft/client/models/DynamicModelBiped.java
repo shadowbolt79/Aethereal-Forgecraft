@@ -39,21 +39,6 @@ public class DynamicModelBiped extends ModelBiped {
         super(modelSize, p_i1149_2_, textureWidthIn, textureHeightIn);
     }
 
-    /**
-     * Combines a models children with this one's for easy rendering.
-     * @param other
-     */
-    public void combineWith(ModelBiped other)
-    {
-        addChildren(this.bipedBody,other.bipedBody.childModels);
-        addChildren(this.bipedHead,other.bipedHead.childModels);
-        addChildren(this.bipedHeadwear,other.bipedHeadwear.childModels);
-        addChildren(this.bipedLeftArm,other.bipedLeftArm.childModels);
-        addChildren(this.bipedRightArm,other.bipedRightArm.childModels);
-        addChildren(this.bipedLeftLeg,other.bipedLeftLeg.childModels);
-        addChildren(this.bipedRightLeg,other.bipedRightLeg.childModels);
-    }
-
     private static void addChildren(ModelRenderer bodyPart, List<ModelRenderer> children) {
         if(children==null||children.isEmpty())return;
 
@@ -71,10 +56,10 @@ public class DynamicModelBiped extends ModelBiped {
      * @param bodyPart one of the body parts within this model
      * @param child the child to add
      */
-    public void addChild(ModelRenderer bodyPart, ModelRenderer child) {
+    public void addChild(ModelRenderer bodyPart, ComponentModelRenderer child) {
         if(bodyPart==null||child==null)return;
 
-
+        child = child.copyOf(this);
 
         if(bodyPart==this.bipedBody){
             bipedBody.addChild(child);
@@ -105,6 +90,33 @@ public class DynamicModelBiped extends ModelBiped {
             bipedRightLeg.addChild(child);
             if(componentRightLeg==null)componentRightLeg=new ArrayList<>();
             componentRightLeg.add(child);
+        }
+    }
+    /**
+     * Adds a child to the model. Not chached to survive
+     */
+    public void addSubcomponent(ModelRenderer bodyPart, ComponentModelRenderer child) {
+        if(bodyPart==null||child==null)return;
+
+        child=child.copyOf(this);
+
+        if(bodyPart==this.bipedBody){
+            bipedBody.addChild(child);
+        }
+        else if(bodyPart==this.bipedHead){
+            bipedHead.addChild(child);
+        }
+        else if(bodyPart==this.bipedLeftArm){
+            bipedLeftArm.addChild(child);
+        }
+        else if(bodyPart==this.bipedRightArm){
+            bipedRightArm.addChild(child);
+        }
+        else if(bodyPart==this.bipedLeftLeg){
+            bipedLeftLeg.addChild(child);
+        }
+        else if(bodyPart==this.bipedRightLeg){
+            bipedRightLeg.addChild(child);
         }
     }
 

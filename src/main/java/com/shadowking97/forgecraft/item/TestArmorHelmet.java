@@ -32,6 +32,8 @@ public class TestArmorHelmet extends ItemBaseArmor {
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
         ArmorCapabilityProvider.Provider provider = new ArmorCapabilityProvider.Provider();
         provider.deserializeNBT(nbt);
+
+        //forces the armor stats client-side
         if(provider.isDirty())
             stack.setTagCompound(provider.serializeNBT());
         return provider;
