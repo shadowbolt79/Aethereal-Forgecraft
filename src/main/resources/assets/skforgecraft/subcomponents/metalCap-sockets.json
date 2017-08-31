@@ -6,6 +6,8 @@
   "cost": "3",
   "slot": "SOCKET",
   "layer": "2",
+  "subcomponent0": "metalCap-leftGem",
+  "subcomponent1": "metalCap-rightGem",
   "textures": {
     "1": "skforgecraft:components/carved_helmet_2_base",
     "2": "skforgecraft:components/carved_helmet_1_base",

@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nullable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -41,56 +42,72 @@ public class ComponentGenerator {
         GEM2
     }
 
-    public static ComponentSlot getSlotFromString(String s)
-    {
-        if(s.equals("HELMET_CAP"))
+    public static ComponentSlot getSlotFromString(String s) {
+        if (s.equals("HELMET_CAP"))
             return ComponentSlot.HELMET_CAP;
-        if(s.equals("PADDING"))
+        if (s.equals("PADDING"))
             return ComponentSlot.PADDING;
-        if(s.equals("HELMET_MASK"))
+        if (s.equals("HELMET_MASK"))
             return ComponentSlot.HELMET_MASK;
-        if(s.equals("SOCKET"))
+        if (s.equals("SOCKET"))
             return ComponentSlot.SOCKET;
-        if(s.equals("TRIM"))
+        if (s.equals("TRIM"))
             return ComponentSlot.TRIM;
-        if(s.equals("GEM")||s.equals("GEM0"))
+        if (s.equals("GEM") || s.equals("GEM0"))
             return ComponentSlot.GEM0;
-        if(s.equals("GEM1"))
+        if (s.equals("GEM1"))
             return ComponentSlot.GEM1;
-        if(s.equals("GEM2"))
+        if (s.equals("GEM2"))
             return ComponentSlot.GEM2;
 
-        System.out.println("Could not get slot for: "+s);
+        System.out.println("Could not get slot for: " + s);
 
         return null;
     }
 
-    public static float[] slot2Offset(ComponentSlot slot)
-    {
-        if(slot!=null)
-        switch(slot)
-        {
-            case HELMET_CAP:
-            case HELMET_MASK:
-                return new float[]{-8,-24,-8};
-        }
+    public static float[] slot2Offset(ComponentSlot slot) {
+        if (slot != null)
+            switch (slot) {
+                case HELMET_CAP:
+                case HELMET_MASK:
+                    return new float[]{-8, -24, -8};
+            }
 
-        return new float[]{0,0,0};
+        return new float[]{0, 0, 0};
     }
 
-    HashMap<String,ComponentDefinition> componentDefinitions = new HashMap<String, ComponentDefinition>();
+    HashMap<String, ComponentDefinition> componentDefinitions = new HashMap<String, ComponentDefinition>();
 
     public static ComponentGenerator INSTANCE = new ComponentGenerator();
 
-    public ComponentDefinition getComponent(String name)
-    {
-        return componentDefinitions.get(name);
+    public ComponentDefinition getComponent(String name) {
+        if(componentDefinitions.containsKey(name))
+            return componentDefinitions.get(name);
+
+        //If getting subcomponents by name is necessary
+        /*
+        String[] names = name.split(".");
+
+        if(names.length>1)
+        {
+            ComponentDefinition definition = componentDefinitions.get(names[0]);
+            if(definition==null)return null;
+            for(int i = 1; i < names.length; i++)
+            {
+                definition = definition.getSubComponent(names[i]);
+                if(definition==null)return null;
+            }
+
+            return definition;
+        }
+        */
+
+        return null;
     }
 
-    public void generateComponents()
-    {
+    public void generateComponents() {
         JsonParser parser = new JsonParser();
-        FMLLog.log(Level.INFO,"FORGECRAFT - REGISTERING COMPONENT FILES" );
+        FMLLog.log(Level.INFO, "FORGECRAFT - REGISTERING COMPONENT FILES");
 
         try {
             URI uri = getClass().getClassLoader().getResource("assets/skforgecraft/components/").toURI();
@@ -102,131 +119,93 @@ public class ComponentGenerator {
                 myPath = Paths.get(uri);
             }
             Stream<Path> walk = Files.walk(myPath, 1);
-            for (Iterator<Path> it = walk.iterator(); it.hasNext();){
+            for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
                 Path path = it.next();
 
-                if(path.toString().endsWith("json")) {
+                if (path.toString().endsWith("json")) {
                     FileReader f = new FileReader(path.toFile());
                     JsonObject component = parser.parse(f).getAsJsonObject();
 
-                    if(!component.has("slot")||!component.has("materialtype")||!component.has("cost")||!component.has("layer")||!component.has("name")){
-                        FMLLog.log(Level.ERROR,"Forgecraft - Error defining component, skipping\n"+path.toString());
-                        continue;
-                    }
+                    ComponentDefinition definition = loadComponent(component,null);
 
-                    String name = component.get("name").getAsString();
-                    FMLLog.log(Level.INFO,"Registering component: "+name);
-
-                    ComponentSlot slot = getSlotFromString(component.get("slot").getAsString());
-
-                    HashMap<String,ComponentDefinition> subcomponentMap = new HashMap<>();
-                    int i = 0;
-                    while(component.has("subcomponent"+i))
-                    {
-                        String subcomponentName = component.get("subcomponent"+i++).getAsString();
-                        JsonObject subcomponent = JSONUtil.getItemSubcomponent(subcomponentName);
-                        if(subcomponent!=null){
-                            subcomponentName = name+'-'+subcomponentName;
-                            FMLLog.log(Level.INFO,"Defining subcomponent: "+subcomponentName);
-
-                            if(!subcomponent.has("slot")||!subcomponent.has("materialtype")||!subcomponent.has("cost")||!subcomponent.has("layer")){
-                                FMLLog.log(Level.ERROR,"Forgecraft - Error defining subcomponent, skipping");
-                                continue;
-                            }
-
-                            ComponentSlot subslot = getSlotFromString(subcomponent.get("slot").getAsString());
-                            ItemMaterial.MaterialType type = ItemMaterial.getTypeFromString(subcomponent.get("materialtype").getAsString());
-                            int cost = subcomponent.get("cost").getAsInt();
-                            int layer = subcomponent.get("layer").getAsInt();
-                            ComponentDefinition definition = new ComponentDefinition(subcomponentName, subslot, type, cost, null, layer, true);
-                            if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT){
-
-                                ResourceLocation baseLocation = null;
-                                ResourceLocation highlightLocation = null;
-                                ResourceLocation shadowLocation = null;
-
-                                FMLLog.log(Level.INFO,"Adding Textures");
-
-                                if(subcomponent.has("maintex")){
-                                    String main[] = subcomponent.get("maintex").getAsString().split(":");
-                                    if(main.length>=2){
-                                        baseLocation = new ResourceLocation(main[0],main[1]);
-                                    }
-                                }
-                                if(subcomponent.has("highlight")){
-                                    String main[] = subcomponent.get("highlight").getAsString().split(":");
-                                    if(main.length>=2){
-                                        highlightLocation = new ResourceLocation(main[0],main[1]);
-                                    }
-                                }
-                                if(subcomponent.has("shadows")){
-                                    String main[] = subcomponent.get("shadows").getAsString().split(":");
-                                    if(main.length>=2){
-                                        shadowLocation = new ResourceLocation(main[0],main[1]);
-                                    }
-                                }
-
-                                definition.addTextures(baseLocation, highlightLocation, shadowLocation);
-
-                                //TODO: LOAD MODEL FILES
-                                ComponentModel model = generateModel(subcomponent,slot2Offset(slot));
-                                definition.setModel(model);
-                            }
-                            subcomponentMap.put(subcomponent.get("name").getAsString(),definition);
-                        }
-                    }
-
-
-                    ItemMaterial.MaterialType type = ItemMaterial.getTypeFromString(component.get("materialtype").getAsString());
-                    int cost = component.get("cost").getAsInt();
-                    int layer = component.get("layer").getAsInt();
-                    ComponentDefinition definition = new ComponentDefinition(name, slot, type, cost, subcomponentMap, layer, false);
-                    if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT){
-
-                        ResourceLocation baseLocation = null;
-                        ResourceLocation highlightLocation = null;
-                        ResourceLocation shadowLocation = null;
-
-                        FMLLog.log(Level.INFO,"Adding Textures to main Component");
-
-                        if(component.has("maintex")){
-                            String main[] = component.get("maintex").getAsString().split(":");
-                            if(main.length>=2){
-                                baseLocation = new ResourceLocation(main[0],main[1]);
-                            }
-                        }
-                        if(component.has("highlight")){
-                            String main[] = component.get("highlight").getAsString().split(":");
-                            if(main.length>=2){
-                                highlightLocation = new ResourceLocation(main[0],main[1]);
-                            }
-                        }
-                        if(component.has("shadows")){
-                            String main[] = component.get("shadows").getAsString().split(":");
-                            if(main.length>=2){
-                                shadowLocation = new ResourceLocation(main[0],main[1]);
-                            }
-                        }
-
-                        definition.addTextures(baseLocation, highlightLocation, shadowLocation);
-
-                        //TODO: LOAD MODELS
-                        ComponentModel model = generateModel(component,slot2Offset(slot));
-                        definition.setModel(model);
-
-                    }
                     //definitionBuilder.add(definition);
-                    componentDefinitions.put(name,definition);
-                    FMLLog.log(Level.INFO,"Finished parsing component definition: "+name);
+                    componentDefinitions.put(definition.getName(), definition);
                 }
             }
-        } catch(URISyntaxException e)
-        {
-            FMLLog.log(Level.ERROR, e,"FORGECRAFT URI SYNTAX EXCEPTION~~~" );
-        } catch(IOException e)
-        {
-            FMLLog.log(Level.INFO, e,"FORGECRAFT IOException EXCEPTION~~~" );
+        } catch (URISyntaxException e) {
+            FMLLog.log(Level.ERROR, e, "FORGECRAFT URI SYNTAX EXCEPTION~~~");
+        } catch (IOException e) {
+            FMLLog.log(Level.INFO, e, "FORGECRAFT IOException EXCEPTION~~~");
         }
+    }
+
+    public ComponentDefinition loadComponent(JsonObject component, String otherName)
+    {
+        if (!component.has("slot") || !component.has("materialtype") || !component.has("cost") || !component.has("layer") || !component.has("name")) {
+            FMLLog.log(Level.ERROR, "Forgecraft - Error defining component, skipping");
+            return null;
+        }
+
+        String name;
+
+        if(otherName==null||otherName.equals(""))
+            name = component.get("name").getAsString();
+        else
+            name = otherName + "." + component.get("name").getAsString();
+
+        FMLLog.log(Level.INFO, "Registering component: " + name);
+        ComponentSlot slot = getSlotFromString(component.get("slot").getAsString());
+
+        HashMap<String, ComponentDefinition> subcomponentMap = new HashMap<>();
+        int i = 0;
+        while (component.has("subcomponent" + i)) {
+            JsonObject subcomponent = JSONUtil.getItemSubcomponent(component.get("subcomponent" + i++).getAsString());
+
+            ComponentDefinition definition = loadComponent(subcomponent,name);
+            subcomponentMap.put(subcomponent.get("name").getAsString(), definition);
+        }
+
+        ItemMaterial.MaterialType type = ItemMaterial.getTypeFromString(component.get("materialtype").getAsString());
+        int cost = component.get("cost").getAsInt();
+        int layer = component.get("layer").getAsInt();
+        ComponentDefinition definition = new ComponentDefinition(name, slot, type, cost, subcomponentMap, layer, false);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+
+            ResourceLocation baseLocation = null;
+            ResourceLocation highlightLocation = null;
+            ResourceLocation shadowLocation = null;
+
+            FMLLog.log(Level.INFO, "Adding Textures to component");
+
+            if (component.has("maintex")) {
+                String main[] = component.get("maintex").getAsString().split(":");
+                if (main.length >= 2) {
+                    baseLocation = new ResourceLocation(main[0], main[1]);
+                }
+            }
+            if (component.has("highlight")) {
+                String main[] = component.get("highlight").getAsString().split(":");
+                if (main.length >= 2) {
+                    highlightLocation = new ResourceLocation(main[0], main[1]);
+                }
+            }
+            if (component.has("shadows")) {
+                String main[] = component.get("shadows").getAsString().split(":");
+                if (main.length >= 2) {
+                    shadowLocation = new ResourceLocation(main[0], main[1]);
+                }
+            }
+
+            definition.addTextures(baseLocation, highlightLocation, shadowLocation);
+
+            //TODO: LOAD MODELS
+            ComponentModel model = generateModel(component, slot2Offset(slot));
+            definition.setModel(model);
+        }
+
+        FMLLog.log(Level.INFO, "Finished parsing component definition: " + name);
+
+        return definition;
     }
 
     public ComponentModel generateModel(JsonObject component, float[] offset)

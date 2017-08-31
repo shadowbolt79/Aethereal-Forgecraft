@@ -8,8 +8,6 @@
   "slot": "HELMET_CAP",
   "subcomponent0": "metalCap-sockets",
   "subcomponent1": "metalCap-furLining",
-  "subcomponent2": "metalCap-leftGem",
-  "subcomponent3": "metalCap-rightGem",
   "layer": "0",
   "textures": {
     "1": "skforgecraft:components/carved_helmet_2_base",
