@@ -18,8 +18,8 @@ import java.util.List;
  * TODO: Yes, everything. Complete after Item Components are working properly.
  * Created by Shadow Bolt on 7/22/2017.
  */
-public class ItemDynamicEquipment extends ItemBaseArmor {
-    public ItemDynamicEquipment(String name) {
+public class ItemDynamicHelmet extends ItemBaseArmor {
+    public ItemDynamicHelmet(String name) {
         super(name, EntityEquipmentSlot.HEAD);
         this.setMaxStackSize(1);
         this.setNoRepair();
@@ -27,7 +27,7 @@ public class ItemDynamicEquipment extends ItemBaseArmor {
 
     @Override
     public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
-        return super.isValidArmor(stack, armorType, entity);
+        return armorType==EntityEquipmentSlot.HEAD;
     }
 
     @Override
