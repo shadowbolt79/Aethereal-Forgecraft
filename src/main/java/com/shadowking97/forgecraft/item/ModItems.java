@@ -1,5 +1,7 @@
 package com.shadowking97.forgecraft.item;
 
+import com.shadowking97.forgecraft.item.armor.ItemDynamicHelmet;
+import com.shadowking97.forgecraft.item.components.ItemComponent;
 import com.shadowking97.forgecraft.item.material.ItemMolten;
 import com.shadowking97.forgecraft.item.tool.ItemHammer;
 import com.shadowking97.forgecraft.item.tool.ItemTongs;
@@ -26,7 +28,13 @@ public class ModItems {
     public static ItemBase moltenMetal;
     public static ItemBase hammer;
 
-    public static ItemBaseArmor testHelmet;
+    public static ItemComponent itemComponentTools;
+    public static ItemComponent itemComponentArmor;
+
+    public static ItemBaseArmor itemHelmet;
+    public static ItemBaseArmor itemChest;
+    public static ItemBaseArmor itemLeggings;
+    public static ItemBaseArmor itemBoots;
 
     public static void init(){
         tongs = register(new ItemTongs("tongs").setCreativeTab(CreativeTabs.MATERIALS));
@@ -44,7 +52,11 @@ public class ModItems {
         furSheet = register(new ItemBaseMultiColored("furSheet").setCreativeTab(CreativeTabs.MATERIALS));
         OreDictionary.registerOre("furSheet",new ItemStack(furSheet,1,OreDictionary.WILDCARD_VALUE));
 
-        testHelmet = register(new TestArmorHelmet().setCreativeTab(CreativeTabs.COMBAT));
+        //testHelmet = register(new TestArmorHelmet().setCreativeTab(CreativeTabs.COMBAT));
+        itemComponentTools = register(new ItemComponent("component"));
+        itemComponentArmor = register(new ItemComponent("component").setArmor());
+
+        itemHelmet = register(new ItemDynamicHelmet("itemHelm")).setCreativeTab(CreativeTabs.COMBAT);
 
         // Register Multicolor items
         String[] dyes =
