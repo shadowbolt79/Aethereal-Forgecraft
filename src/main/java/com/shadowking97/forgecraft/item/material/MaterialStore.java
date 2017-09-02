@@ -25,9 +25,9 @@ public class MaterialStore {
     HashMap<String,ItemMaterial> matNames;
 
     public MaterialStore() {
-        matNames=new HashMap<String, ItemMaterial>();
-        items2Mat = new HashSet<ItemMaterialDefinition>();
-        ores2Mat = new HashSet<ItemMaterialDefinition>();
+        matNames=new HashMap<>();
+        items2Mat = new HashSet<>();
+        ores2Mat = new HashSet<>();
     }
 
     public static MaterialStore INSTANCE = new MaterialStore();
@@ -39,7 +39,7 @@ public class MaterialStore {
 
         //#####METALS
 
-        itemMaterial = generateMaterial("Steel", 9,14, ItemMaterial.MaterialType.Metal, 0x7d7d7d, 0xcecece, 0x4d4d4d);
+        itemMaterial = generateMaterial("Steel", 10,9, ItemMaterial.MaterialType.Metal, 0x7d7d7d, 0xcecece, 0x4d4d4d);
         setMaterialForOreDict(itemMaterial,"nuggetSteel",1);
         setMaterialForOreDict(itemMaterial,"ingotSteel", 9);
         setMaterialForOreDict(itemMaterial,"blockSteel",81);
@@ -48,7 +48,7 @@ public class MaterialStore {
         setOreMaterialForOreDict(itemMaterial, "blockIron", 81);
 
         if(OreDictionary.doesOreNameExist("nuggetIron")||OreDictionary.doesOreNameExist("ingotIron")||OreDictionary.doesOreNameExist("blockIron")) {
-            itemMaterial = generateMaterial("Iron", 8, 10, ItemMaterial.MaterialType.Metal, 0xc5c5c5, 0xffffff, 0x6e6e6e);
+            itemMaterial = generateMaterial("Iron", 8, 7, ItemMaterial.MaterialType.Metal, 0xc5c5c5, 0xffffff, 0x6e6e6e);
             setMaterialForOreDict(itemMaterial, "nuggetIron", 1);
             setMaterialForOreDict(itemMaterial, "ingotIron", 9);
             setMaterialForOreDict(itemMaterial, "blockIron", 81);
@@ -66,7 +66,7 @@ public class MaterialStore {
 
         //####GEMSTONES
 
-        itemMaterial = generateMaterial("Diamond", 9, 8, ItemMaterial.MaterialType.Crystal, 0x8cf4e2, 0xffffff, 0x1b7b6b);
+        itemMaterial = generateMaterial("Diamond", 9, 9, ItemMaterial.MaterialType.Crystal, 0x8cf4e2, 0xffffff, 0x1b7b6b);
         setMaterialForOreDict(itemMaterial,"gemDiamond",1);
         setMaterialForOreDict(itemMaterial, "blockDiamond",9);
 
@@ -115,7 +115,7 @@ public class MaterialStore {
             "White"
         };*/
         //#####FUR
-        itemMaterial = generateMultiMaterial("Fur", 1, 2, ItemMaterial.MaterialType.Fur,
+        itemMaterial = generateMultiMaterial("Fur", 1, 1, ItemMaterial.MaterialType.Fur,
                 new int[]{
                         0x171717,0xb81d1d,0x247a00,0x79503f,0x003584,0x3e0052,0x00bcb1,0x919191,
                         0x5e5e5e,0xff85c2,0x00ff00,0xffff00,0x87cefa,0xff00ff,0xff8e00,0xf0f0f0
@@ -129,6 +129,11 @@ public class MaterialStore {
                         0x535353,0xd46ea1,0x14cc14,0xcccc14,0x6ba4c7,0xcc14cc,0xd1790a,0xbfbfbf
         });        //Shadows
         setMaterialForOreDict(itemMaterial, "furSheet", 1);
+
+
+        //######LEATHER
+        itemMaterial = generateMaterial("Leather", 2,3, ItemMaterial.MaterialType.Leather, 0x603d26, 0xa46f4a, 0x472c1c);
+        setMaterialForOreDict(itemMaterial, "leather",8);
     }
 
     private ItemMaterial generateMaterial(String name, int durability, int strength, ItemMaterial.MaterialType type, int baseColor, int highlightColor, int shadowColor)
