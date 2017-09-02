@@ -18,4 +18,16 @@ public interface IArmorCapability extends INBTSerializable<NBTTagCompound> {
     ModelBiped getModel(ModelBiped defaultModel);
 
     void addSubcomponentModels(DynamicModelBiped biped);
+
+    double getDamageReduction();
+    double getToughness();
+
+    void invalidate();
+
+    void setParent(IArmorCapability parent);
+
+    void damageItem(int numDamage);
+
+    int getMaxDamage();
+    int getDamage();
 }

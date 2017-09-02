@@ -3,6 +3,7 @@ package com.shadowking97.forgecraft.capabilities;
 import com.shadowking97.forgecraft.client.models.DynamicModelBiped;
 import com.shadowking97.forgecraft.item.components.ComponentDefinition;
 import com.shadowking97.forgecraft.item.components.ComponentGenerator;
+import com.shadowking97.forgecraft.item.components.ItemComponent;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import com.shadowking97.forgecraft.item.material.MaterialStore;
 import net.minecraft.client.model.ModelBiped;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.capabilities.*;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Shadow Bolt on 8/20/2017.
@@ -61,13 +63,28 @@ public class ArmorCapabilityProvider{
         protected ComponentDefinition componentDefinition = null;
         protected ItemMaterial componentMaterial = null;
 
+        private static Random r = new Random();
+
         boolean dirty = false;
         boolean needsRemodel = true;
 
         //Used for materials that have multiple colors, or plausibly custom.
+        //Also used for icons for item components
         ItemStack colorItem = null;
 
+        double damageReduction=-1;
+        double toughness = -1;
+        int damage = -1;
+        int maxDamage = -1;
+
         List<ItemStack> subComponents;
+
+        IArmorCapability parent = null;
+
+        @Override
+        public void setParent(IArmorCapability parent) {
+            this.parent = parent;
+        }
 
         @Override
         public boolean isDirty() {
@@ -114,7 +131,6 @@ public class ArmorCapabilityProvider{
 
                         if (renderer != null)
                             theModel.addChild(renderer, componentDefinition.getMaterialModel(componentMaterial));
-
                 }
             }
 
@@ -146,6 +162,49 @@ public class ArmorCapabilityProvider{
             }
 
             return theModel;
+        }
+
+        @Override
+        public double getDamageReduction() {
+            if(damageReduction!=-1)return damageReduction;
+
+            damageReduction=0;
+
+            if(componentDefinition!=null&&componentMaterial!=null)
+            {
+                damageReduction = (componentMaterial.getStrength()*componentDefinition.getMaterialAmount())/100.0;
+            }
+
+            if(subComponents!=null)
+            {
+                for(ItemStack subcomp : subComponents)
+                {
+                    IArmorCapability cap = subcomp.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY,EnumFacing.WEST);
+                    damageReduction+=cap.getDamageReduction();
+                }
+            }
+
+            return damageReduction;
+        }
+
+        @Override
+        public double getToughness() {
+            //TODO: Figure out toughness
+            return 0;
+        }
+
+        /***
+         * Called when something changes. (Component broke, component added or removed, ect)
+         */
+        @Override
+        public void invalidate() {
+            toughness=-1;
+            damageReduction=-1;
+            needsRemodel=true;
+            maxDamage=-1;
+            damage=-1;
+            parent.invalidate();
+            setDirty();
         }
 
         @Override
@@ -244,6 +303,70 @@ public class ArmorCapabilityProvider{
             {
                 colorItem = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("colorItem"));
             }
+        }
+
+        /***
+         * Should only be called on top level armor. Used to damage component itemstacks.
+         * @param numDamage
+         */
+        @Override
+        public void damageItem(int numDamage) {
+            if(subComponents!=null)
+            {
+                int numComponents = subComponents.size();
+
+                while(numDamage>0||this.getDamage()>=this.getMaxDamage())
+                {
+                    ItemStack component = subComponents.get(r.nextInt(numComponents));
+
+                    if(component.getItemDamage()<component.getMaxDamage())
+                    {
+                        int toDamage = Math.min(numDamage,component.getMaxDamage()-component.getItemDamage());
+                        component.setItemDamage(component.getItemDamage()+toDamage);
+
+                        if(component.getItemDamage()>=component.getMaxDamage())invalidate();
+
+                        numDamage-=toDamage;
+                        damage+=toDamage;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public int getDamage()
+        {
+            if(damage!=-1)return damage;
+
+            damage = 0;
+
+            if(subComponents!=null)
+            {
+                for(ItemStack component: subComponents)
+                    damage+=component.getItemDamage();
+            }
+
+            return damage;
+        }
+
+        @Override
+        public int getMaxDamage() {
+            if(maxDamage!=-1)return maxDamage;
+
+            maxDamage = 0;
+
+            if(componentDefinition!=null&&componentMaterial!=null)
+            {
+                maxDamage=componentDefinition.getMaterialAmount()*componentMaterial.getDurability();
+            }
+
+            if(subComponents!=null)
+            {
+                for(ItemStack component: subComponents)
+                    maxDamage+=component.getItemDamage();
+            }
+
+            return maxDamage;
         }
     }
 
