@@ -1,0 +1,82 @@
+{
+  "forge_marker":1,
+  "defaults": {
+    "textures": {
+      "particle": "blocks/cobblestone",
+      "0": "blocks/cobblestone",
+      "1": "blocks/coal_block"
+    },
+    "model": "skforgecraft:forge",
+    "uvlock":false
+  },
+  "variants": {
+    "burning": {
+      "true": {
+        "textures": {
+          "1": "skforgecraft:blocks/forgeBurning"
+        }
+      },
+      "false": {
+      }
+    },
+
+    "part":{
+      "0":{ "y":270},
+      "1":{"y":180},
+      "2":{},
+      "3":{"y":90}
+    },
+
+    "filled":{
+      "0":{},
+      "1":{
+        "submodel":"skforgecraft:forge/coal1",
+        "uvlock":true
+      },
+      "2":{
+        "submodel":"skforgecraft:forge/coal2",
+        "uvlock":true
+      },
+      "3":{
+        "submodel":"skforgecraft:forge/coal3",
+        "uvlock":true
+      },
+      "4":{
+        "submodel":"skforgecraft:forge/coal4",
+        "uvlock":true
+      },
+      "5":{
+        "submodel":"skforgecraft:forge/coal5",
+        "uvlock":true
+      },
+      "6":{
+        "submodel":"skforgecraft:forge/coal6",
+        "uvlock":true
+      },
+      "7":{
+        "submodel":"skforgecraft:forge/coal7",
+        "uvlock":true
+      },
+      "8":{
+        "submodel":"skforgecraft:forge/coal8",
+        "uvlock":true
+      },
+      "9":{
+        "submodel":"skforgecraft:forge/coal9",
+        "uvlock":true
+      },
+      "10":{
+        "submodel":"skforgecraft:forge/coal10",
+        "uvlock":true
+      },
+      "11":{
+        "submodel":"skforgecraft:forge/coal11",
+        "uvlock":true
+      },
+      "12":{
+        "submodel":"skforgecraft:forge/coal12",
+        "uvlock":true
+      }
+    }
+  }
+}

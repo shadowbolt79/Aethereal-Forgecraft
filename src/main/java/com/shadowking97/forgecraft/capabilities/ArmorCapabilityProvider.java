@@ -250,7 +250,6 @@ public class ArmorCapabilityProvider{
             }
         }
 
-
         @Override
         public NBTTagCompound serializeNBT() {
             NBTTagCompound compound = new NBTTagCompound();

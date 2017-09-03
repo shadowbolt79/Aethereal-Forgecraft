@@ -4,10 +4,7 @@ import com.shadowking97.forgecraft.block.ModBlocks;
 import com.shadowking97.forgecraft.item.ModItems;
 import com.shadowking97.forgecraft.item.ModRecipies;
 import com.shadowking97.forgecraft.item.material.MaterialStore;
-import com.shadowking97.forgecraft.network.PacketRequestUpdateAnvil;
-import com.shadowking97.forgecraft.network.PacketRequestUpdateBloomery;
-import com.shadowking97.forgecraft.network.PacketUpdateAnvil;
-import com.shadowking97.forgecraft.network.PacketUpdateBloomery;
+import com.shadowking97.forgecraft.network.*;
 import com.shadowking97.forgecraft.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -47,6 +44,8 @@ public class Forgecraft {
         network.registerMessage(new PacketRequestUpdateBloomery.Handler(), PacketRequestUpdateBloomery.class, networkDiscriminator++, Side.SERVER);
         network.registerMessage(new PacketUpdateAnvil.Handler(), PacketUpdateAnvil.class, networkDiscriminator++, Side.CLIENT);
         network.registerMessage(new PacketRequestUpdateAnvil.Handler(), PacketRequestUpdateAnvil.class, networkDiscriminator++, Side.SERVER);
+        network.registerMessage(new PacketUpdateForge.Handler(), PacketUpdateForge.class, networkDiscriminator++, Side.CLIENT);
+        network.registerMessage(new PacketRequestUpdateForge.Handler(),PacketRequestUpdateForge.class,networkDiscriminator++,Side.SERVER);
 
         proxy.registerRenderers();
     }

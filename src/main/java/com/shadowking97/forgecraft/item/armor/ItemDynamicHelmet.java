@@ -26,11 +26,6 @@ public class ItemDynamicHelmet extends ItemBaseArmor {
     }
 
     @Override
-    public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
-        return armorType==EntityEquipmentSlot.HEAD;
-    }
-
-    @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         return super.getDurabilityForDisplay(stack);
     }

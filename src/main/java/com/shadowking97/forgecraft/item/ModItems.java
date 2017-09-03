@@ -53,8 +53,8 @@ public class ModItems {
         OreDictionary.registerOre("furSheet",new ItemStack(furSheet,1,OreDictionary.WILDCARD_VALUE));
 
         //testHelmet = register(new TestArmorHelmet().setCreativeTab(CreativeTabs.COMBAT));
-        itemComponentTools = register(new ItemComponent("component"));
-        itemComponentArmor = register(new ItemComponent("component").setArmor());
+        itemComponentTools = register(new ItemComponent("componentTool"));
+        itemComponentArmor = register(new ItemComponent("componentArmor").setArmor());
 
         itemHelmet = register(new ItemDynamicHelmet("itemHelm")).setCreativeTab(CreativeTabs.COMBAT);
 

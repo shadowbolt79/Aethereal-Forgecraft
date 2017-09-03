@@ -13,11 +13,13 @@ public class ModBlocks {
 
     public static BlockBase bloomery;
     public static BlockBase anvil;
+    public static BlockBase forge;
 
     public static void init()
     {
         bloomery = register(new Bloomery(Material.ROCK,"bloomery"));
         anvil = register(new Anvil(Material.ANVIL,"anvil").setCreativeTab(CreativeTabs.MATERIALS));
+        forge = register(new Forge("forge").setCreativeTab(CreativeTabs.MATERIALS));
 
     }
 

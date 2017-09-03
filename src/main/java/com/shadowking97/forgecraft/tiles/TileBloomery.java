@@ -79,7 +79,6 @@ public class TileBloomery extends TileEntity implements ITickable{
 
         @Override
         protected void onContentsChanged(int slot) {
-            Forgecraft.network.sendToServer(new PacketRequestUpdateBloomery(TileBloomery.this));
             markDirty();
         }
     };
@@ -433,8 +432,10 @@ public class TileBloomery extends TileEntity implements ITickable{
 
                 System.out.println("Bloomery smelting progress: "+smeltingProgress);
             }
-            markDirty();
-            if(updateFlag)sendUpdate();
+            if(updateFlag) {
+                markDirty();
+                sendUpdate();
+            }
         }
     }
 }
