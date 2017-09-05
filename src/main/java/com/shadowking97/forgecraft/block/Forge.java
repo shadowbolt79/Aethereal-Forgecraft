@@ -1,5 +1,7 @@
 package com.shadowking97.forgecraft.block;
 
+import com.shadowking97.forgecraft.Forgecraft;
+import com.shadowking97.forgecraft.gui.CraftingGUIHandler;
 import com.shadowking97.forgecraft.tiles.TileForge;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -155,13 +157,18 @@ public class Forge extends BlockContainerBase<TileForge> {
             }
         }
 
-        if(!worldIn.isRemote) {
             if (heldItem != null) {
                 //Add charcoal?
-                if (heldItem.getItem() == Items.COAL && heldItem.getMetadata() == 1)
-                    playerIn.setHeldItem(hand, getTileEntity(worldIn, pos2).addCharcoal(heldItem, playerIn.isCreative()));
+                if (heldItem.getItem() == Items.COAL && heldItem.getMetadata() == 1) {
+                    if(!worldIn.isRemote)
+                        playerIn.setHeldItem(hand, getTileEntity(worldIn, pos2).addCharcoal(heldItem, playerIn.isCreative()));
+                    return true;
+                }
             }
-        }
+
+
+        if(worldIn.isRemote)
+            playerIn.openGui(Forgecraft.instance, CraftingGUIHandler.FORGE_CRAFTING_GUI,worldIn,pos.getX(),pos.getY(),pos.getZ());
 
         return true;
     }

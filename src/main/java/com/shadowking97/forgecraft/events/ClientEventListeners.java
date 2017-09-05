@@ -1,10 +1,12 @@
 package com.shadowking97.forgecraft.events;
 
+import com.shadowking97.forgecraft.gui.CraftingGUIContainer;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import com.shadowking97.forgecraft.item.material.ItemMaterialDefinition;
 import com.shadowking97.forgecraft.item.material.MaterialStore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -27,6 +29,22 @@ public class ClientEventListeners {
                                 "\nMaterial Amount: "+itemMaterialDefinition.getValue()*tooltipEvent.getItemStack().stackSize);
             else
                 tooltipEvent.getToolTip().add("(Press "+Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName()+ " for Aetherial Forge stats)");
+        }
+    }
+
+    @SubscribeEvent
+    public void renderGameOverlayEvent(RenderGameOverlayEvent event)
+    {
+        if(Minecraft.getMinecraft().currentScreen instanceof CraftingGUIContainer) {
+            switch(event.getType())
+            {
+                case CROSSHAIRS:
+                case HOTBAR:
+                case HEALTH:
+                case HEALTHMOUNT:
+                case ARMOR:
+                    event.setCanceled(true);
+            }
         }
     }
 }
