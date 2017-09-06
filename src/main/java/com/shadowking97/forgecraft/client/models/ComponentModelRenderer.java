@@ -161,7 +161,7 @@ public class ComponentModelRenderer extends ModelRenderer {
     }
 
     @SideOnly(Side.CLIENT)
-    private int getDisplayList()
+    public int getDisplayList()
     {
         if(!compiled)
             compileDisplayList(1);

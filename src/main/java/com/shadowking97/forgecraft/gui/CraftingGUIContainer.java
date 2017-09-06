@@ -1,13 +1,16 @@
 package com.shadowking97.forgecraft.gui;
 
+import com.shadowking97.forgecraft.client.MapHolder;
+import com.shadowking97.forgecraft.client.models.ComponentModelRenderer;
 import com.shadowking97.forgecraft.item.components.ComponentDefinition;
+import com.shadowking97.forgecraft.item.components.ComponentGenerator;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
+import com.shadowking97.forgecraft.item.material.MaterialStore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Shadow Bolt on 9/3/2017.
@@ -27,6 +31,9 @@ public class CraftingGUIContainer extends GuiScreen {
     private ItemMaterial.MaterialType materialType;
     private EntityPlayer thePlayer;
     private GuiScrollableList<ComponentDefinition> guiScrollableList;
+
+    private ArrayList<ComponentDefinition> temp;
+    private ComponentModelRenderer tempModel = ComponentGenerator.INSTANCE.getComponent("metalCap").getMaterialModel(MaterialStore.INSTANCE.getMaterialByName("Iron"));
 
     private static final ResourceLocation CRAFTING_GUI_TEXTURES = new ResourceLocation("skforgecraft","textures/gui/craftinggui.png");
 
@@ -81,15 +88,6 @@ public class CraftingGUIContainer extends GuiScreen {
         return maxTabOffset;
     }
 
-    public int maxScrollOffset()
-    {
-        if(maxScrollOffset!=-1)return maxScrollOffset;
-
-        //do stuff
-
-        return maxScrollOffset;
-    }
-
     /**
      * Draws a textured rectangle at the current z-value.
      */
@@ -103,6 +101,27 @@ public class CraftingGUIContainer extends GuiScreen {
         vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + width) /128), (double)((float)(textureY + 0) /64)).endVertex();
         vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)this.zLevel).tex((double)((float)(textureX + 0) /128), (double)((float)(textureY + 0) /64)).endVertex();
         tessellator.draw();
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if(guiScrollableList.visible)
+            guiScrollableList.mouseClicked(mouseX,mouseY,mouseButton);
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        if(guiScrollableList.visible)
+            guiScrollableList.mouseClickMove(mouseX,mouseY,clickedMouseButton,timeSinceLastClick);
+        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        if(guiScrollableList.visible)
+            guiScrollableList.mouseReleased();
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     public class GuiTab extends GuiButton
@@ -204,6 +223,36 @@ public class CraftingGUIContainer extends GuiScreen {
         super.onGuiClosed();
     }
 
+    /**
+     * Draws an entity on the screen looking toward the cursor.
+     */
+    public static void drawModelOnScreen(int posX, int posY, int scale, int mouseY, ComponentModelRenderer renderer)
+    {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float)posX, (float)posY, 50.0F);
+        GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+        GlStateManager.rotate(180, 0, 1.0F, 0.0F);
+
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+
+        GL11.glCallList(renderer.getDisplayList());
+
+        rendermanager.setRenderShadow(true);
+
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
@@ -230,18 +279,46 @@ public class CraftingGUIContainer extends GuiScreen {
             this.drawTexturedImage(xPos, 31, 96, 16, 16, 16);
         }
 
+        guiScrollableList.draw(mouseX,mouseY);
+
+        mc.getTextureManager().bindTexture(MapHolder.LOCATION_COMPONENTS_TEXTURE);
+        drawModelOnScreen((this.width>>2)*3-20,(this.height>>1)-20,7,mouseY,tempModel);
+        mc.getTextureManager().bindTexture(CRAFTING_GUI_TEXTURES);
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     GuiTab weapons,tools,helmet,chest,legs,boots,jewelry,misc;
-    GuiImageButton previous, next, scrollUp, scrollDown;
+    GuiImageButton previous, next;
 
     @Override
     public void initGui() {
         int i = 0;
         int k = 0;
 
-        guiScrollableList = new GuiScrollableList<>(25,53,(width>>1)-50,((height>>2)*3)-50,(ComponentDefinition o)-> o.getName());
+        guiScrollableList = new GuiScrollableList<>(25,48,(width>>1)-28,((height>>2)*3)-51,
+                (ComponentDefinition o)-> o.getName(),
+                null, null, CRAFTING_GUI_TEXTURES);
+
+        if(temp==null){
+            temp=new ArrayList<>();
+            if(ComponentGenerator.INSTANCE.getComponent("metalCap")==null)
+                System.out.println("AAAAAAAA");
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+        }
+
+        guiScrollableList.setList(temp);
 
         maxTabOffset =-1;
         if(selectedTab!=null)
@@ -301,12 +378,6 @@ public class CraftingGUIContainer extends GuiScreen {
                     break;
             }
         }
-
-        this.buttonList.add(this.scrollUp = new GuiImageButton(i++,(this.width>>1)-25,53,52,9,68,9, 9,7));
-        this.buttonList.add(this.scrollDown = new GuiImageButton(i++,(this.width>>1)-25,((this.height>>2)*3)-10,52,16,68,16, 9,7));
-
-        scrollbarMin=60;
-        scrollbarMax=((this.height>>2)*3)-15;
     }
 
     @Override
