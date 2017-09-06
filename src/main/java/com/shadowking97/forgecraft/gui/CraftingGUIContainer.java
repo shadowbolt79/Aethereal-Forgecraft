@@ -2,7 +2,6 @@ package com.shadowking97.forgecraft.gui;
 
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,8 +12,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -62,15 +61,31 @@ public class CraftingGUIContainer extends GuiScreen {
         return true;
     }
 
-    public int maxOffset()
+    int maxTabOffset = -1;
+    int maxScrollOffset = -1;
+
+    int scrollbarMin, scrollbarMax;
+
+    public int maxTabOffset()
     {
+        if(maxTabOffset !=-1)return maxTabOffset;
+
         int i = (this.width>>1)-51;
 
-        int j = 0;
-        while((170-(j*20))>i&&j<8)
-            j++;
+        maxTabOffset = 0;
+        while((170-(maxTabOffset *20))>i&& maxTabOffset <8)
+            maxTabOffset++;
 
-        return j;
+        return maxTabOffset;
+    }
+
+    public int maxScrollOffset()
+    {
+        if(maxScrollOffset!=-1)return maxScrollOffset;
+
+        //do stuff
+
+        return maxScrollOffset;
     }
 
     /**
@@ -152,6 +167,14 @@ public class CraftingGUIContainer extends GuiScreen {
             hY=highlightY<<4;
         }
 
+        public GuiImageButton(int buttonId, int x, int y, int unhighlightX, int unhighlightY, int highlightX, int highlightY, int widthIn, int heightIn) {
+            super(buttonId, x, y, widthIn,heightIn, "");
+            uX=unhighlightX;
+            uY=unhighlightY;
+            hX=highlightX;
+            hY=highlightY;
+        }
+
         @Override
         public void drawButton(Minecraft mc, int mouseX, int mouseY) {
             if (this.visible)
@@ -176,7 +199,6 @@ public class CraftingGUIContainer extends GuiScreen {
 
     @Override
     public void onGuiClosed() {
-
         super.onGuiClosed();
     }
 
@@ -199,7 +221,7 @@ public class CraftingGUIContainer extends GuiScreen {
         this.drawTexturedImage(14,31,80,16,16,16);
         int xPos = (width>>1)-36;
         this.drawTexturedImage(xPos, 31, 112, 16, 16, 16);
-        int max = ((8-maxOffset())*20)+26;
+        int max = ((8- maxTabOffset())*20)+26;
         while((xPos>max)) {
             xPos-=16;
             if(xPos<max)xPos=max;
@@ -210,12 +232,13 @@ public class CraftingGUIContainer extends GuiScreen {
     }
 
     GuiTab weapons,tools,helmet,chest,legs,boots,jewelry,misc;
-    GuiImageButton previous, next;
+    GuiImageButton previous, next, scrollUp, scrollDown;
 
     @Override
     public void initGui() {
         int i = 0;
         int k = 0;
+        maxTabOffset =-1;
         if(selectedTab!=null)
         {
             if(selectedTab==weapons)k=1;
@@ -229,10 +252,8 @@ public class CraftingGUIContainer extends GuiScreen {
         }
 
         this.buttonList.add(this.weapons = new GuiTab(i++, 30, 15, "Weapons",0,2,0,3));
-        if(selectedTab==null)
-            selectedTab = this.weapons;
 
-        if(tabOffset>maxOffset())tabOffset=maxOffset();
+        if(tabOffset> maxTabOffset())tabOffset= maxTabOffset();
         this.buttonList.add(this.tools = new GuiTab(i++, 50, 15, "Tools",1,2,1,3));
         this.buttonList.add(this.helmet = new GuiTab(i++, 70, 15, "Helms",2,2,2,3));
         this.buttonList.add(this.chest = new GuiTab(i++, 90, 15, "Chest",3,2,3,3));
@@ -243,7 +264,9 @@ public class CraftingGUIContainer extends GuiScreen {
         this.buttonList.add(this.previous = new GuiImageButton(i++,8,15,0,0,0,1));
         this.buttonList.add(this.next = new GuiImageButton(i++,(this.width>>1)-30,15,1,0,1,1));
 
-        if(k!=0)
+        if(selectedTab==null)
+            selectedTab = this.weapons;
+        else if(k!=0)
         {
             switch(k)
             {
@@ -273,14 +296,18 @@ public class CraftingGUIContainer extends GuiScreen {
                     break;
             }
         }
+
+        this.buttonList.add(this.scrollUp = new GuiImageButton(i++,(this.width>>1)-25,53,52,9,68,9, 9,7));
+        this.buttonList.add(this.scrollDown = new GuiImageButton(i++,(this.width>>1)-25,((this.height>>2)*3)-10,52,16,68,16, 9,7));
+
+        scrollbarMin=60;
+        scrollbarMax=((this.height>>2)*3)-15;
     }
 
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
-
-
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
@@ -296,7 +323,7 @@ public class CraftingGUIContainer extends GuiScreen {
             }
             else if(button==next)
             {
-                if(tabOffset<maxOffset())tabOffset++;
+                if(tabOffset< maxTabOffset())tabOffset++;
             }
         }
     }
