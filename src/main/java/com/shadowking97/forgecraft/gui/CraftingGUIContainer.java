@@ -1,5 +1,6 @@
 package com.shadowking97.forgecraft.gui;
 
+import com.shadowking97.forgecraft.item.components.ComponentDefinition;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -25,6 +26,7 @@ public class CraftingGUIContainer extends GuiScreen {
     private ItemStack componentItem;
     private ItemMaterial.MaterialType materialType;
     private EntityPlayer thePlayer;
+    private GuiScrollableList<ComponentDefinition> guiScrollableList;
 
     private static final ResourceLocation CRAFTING_GUI_TEXTURES = new ResourceLocation("skforgecraft","textures/gui/craftinggui.png");
 
@@ -238,6 +240,9 @@ public class CraftingGUIContainer extends GuiScreen {
     public void initGui() {
         int i = 0;
         int k = 0;
+
+        guiScrollableList = new GuiScrollableList<>(25,53,(width>>1)-50,((height>>2)*3)-50,(ComponentDefinition o)-> o.getName());
+
         maxTabOffset =-1;
         if(selectedTab!=null)
         {
