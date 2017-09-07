@@ -110,9 +110,6 @@ public class ComponentModelRenderer extends ModelRenderer {
         VertexBuffer vertexBuffer = Tessellator.getInstance().getBuffer();
         vertexBuffer.begin(7,DefaultVertexFormats.ITEM);
 
-        //Minecraft.getMinecraft().getTextureManager().bindTexture(MapHolder.LOCATION_COMPONENTS_TEXTURE);
-        //Minecraft.getMinecraft().getTextureManager().getTexture(MapHolder.LOCATION_COMPONENTS_TEXTURE).setBlurMipmap(false,false);
-
         GlStateManager.pushMatrix();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -133,6 +130,10 @@ public class ComponentModelRenderer extends ModelRenderer {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.alphaFunc(516, 0.003921569F);
 
+        //See if this helps with the darkness on armor models
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
         GlStateManager.pushMatrix();
 
@@ -140,6 +141,12 @@ public class ComponentModelRenderer extends ModelRenderer {
         Tessellator.getInstance().draw();
 
         GlStateManager.popMatrix();
+
+        //See if this helps with the darkness on armor models
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.enableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
 
         //GlStateManager.disableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
         GlStateManager.disableBlend();

@@ -133,7 +133,10 @@ public class CraftingGUIContainer extends GuiScreen {
         else if(tempModel==selectedObject&&tempModel!=null)
         {
             modelRotX+=(this.mouseX-mouseX)<<1;
+
             modelRotY-=(this.mouseY-mouseY);
+            if(modelRotY>90)modelRotY=90;
+            else if(modelRotY<-90)modelRotY=-90;
         }
 
         this.mouseX=mouseX;
@@ -251,7 +254,7 @@ public class CraftingGUIContainer extends GuiScreen {
         super.onGuiClosed();
     }
 
-    float modelRotX =0 , modelRotY =0;
+    float modelRotX =25 , modelRotY =16;
 
     /**
      * Draws an entity on the screen looking toward the cursor.
@@ -265,16 +268,18 @@ public class CraftingGUIContainer extends GuiScreen {
         GlStateManager.rotate(180, 0, 1.0F, 0.0F);
 
         RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableBlend();
+
         GlStateManager.rotate(modelRotX, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(modelRotY, 1.0F, 0.0F, 0.0F);
 
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
+        //rendermanager.setRenderShadow(false);
 
         GL11.glCallList(renderer.getDisplayList());
 
-        rendermanager.setRenderShadow(true);
+        //rendermanager.setRenderShadow(true);
 
         GlStateManager.popMatrix();
         RenderHelper.disableStandardItemLighting();
