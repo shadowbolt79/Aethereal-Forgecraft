@@ -181,6 +181,13 @@ public class GuiScrollableList<T> extends Gui {
         GL11.glScissor(0,0,mc.displayWidth,mc.displayHeight);
     }
 
+    public boolean inBoundries(int x, int y)
+    {
+        if(x<xPosition||x>xPosition+width)return false;
+        if(y<yPosition||y>yPosition+height)return false;
+        return true;
+    }
+
     public void mouseClicked(int mouseX, int mouseY, int clickedMouseButton)
     {
         if(visible)

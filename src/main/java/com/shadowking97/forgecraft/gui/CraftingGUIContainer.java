@@ -103,24 +103,52 @@ public class CraftingGUIContainer extends GuiScreen {
         tessellator.draw();
     }
 
+    //Variables for tracking object rotation
+    Object selectedObject;
+    int mouseX, mouseY;
+
+
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if(guiScrollableList.visible)
-            guiScrollableList.mouseClicked(mouseX,mouseY,mouseButton);
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        if(mouseButton==0) {
+            if (guiScrollableList.inBoundries(mouseX, mouseY)) {
+                selectedObject = guiScrollableList;
+
+                if (guiScrollableList.visible)
+                    guiScrollableList.mouseClicked(mouseX, mouseY, mouseButton);
+            } else if (mouseX > (width >> 1) && mouseY < (height >> 2) * 3)
+                selectedObject = tempModel;
+        }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        if(guiScrollableList.visible)
-            guiScrollableList.mouseClickMove(mouseX,mouseY,clickedMouseButton,timeSinceLastClick);
-        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
+        if(guiScrollableList.visible&&guiScrollableList==selectedObject&&mouseButton==0)
+            guiScrollableList.mouseClickMove(mouseX,mouseY,mouseButton,timeSinceLastClick);
+
+        else if(tempModel==selectedObject&&tempModel!=null)
+        {
+            modelRotX+=(this.mouseX-mouseX)<<1;
+            modelRotY-=(this.mouseY-mouseY);
+        }
+
+        this.mouseX=mouseX;
+        this.mouseY=mouseY;
+
+        super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         if(guiScrollableList.visible)
             guiScrollableList.mouseReleased();
+
+        selectedObject = null;
+
         super.mouseReleased(mouseX, mouseY, state);
     }
 
@@ -223,10 +251,12 @@ public class CraftingGUIContainer extends GuiScreen {
         super.onGuiClosed();
     }
 
+    float modelRotX =0 , modelRotY =0;
+
     /**
      * Draws an entity on the screen looking toward the cursor.
      */
-    public static void drawModelOnScreen(int posX, int posY, int scale, int mouseY, ComponentModelRenderer renderer)
+    public static void drawModelOnScreen(int posX, int posY, float modelRotX, float modelRotY, int scale, int mouseY, ComponentModelRenderer renderer)
     {
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
@@ -235,7 +265,8 @@ public class CraftingGUIContainer extends GuiScreen {
         GlStateManager.rotate(180, 0, 1.0F, 0.0F);
 
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(modelRotX, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(modelRotY, 1.0F, 0.0F, 0.0F);
 
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
@@ -282,7 +313,7 @@ public class CraftingGUIContainer extends GuiScreen {
         guiScrollableList.draw(mouseX,mouseY);
 
         mc.getTextureManager().bindTexture(MapHolder.LOCATION_COMPONENTS_TEXTURE);
-        drawModelOnScreen((this.width>>2)*3-20,(this.height>>1)-20,7,mouseY,tempModel);
+        drawModelOnScreen((this.width>>2)*3,(this.height>>1)+5, modelRotX, modelRotY,8,mouseY,tempModel);
         mc.getTextureManager().bindTexture(CRAFTING_GUI_TEXTURES);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
