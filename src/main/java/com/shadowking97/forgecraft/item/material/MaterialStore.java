@@ -66,7 +66,7 @@ public class MaterialStore {
 
         //####GEMSTONES
 
-        itemMaterial = generateMaterial("Diamond", 9, 9, ItemMaterial.MaterialType.Crystal, 0x8cf4e2, 0xffffff, 0x1b7b6b);
+        itemMaterial = generateMaterial("Diamond", 12, 10, ItemMaterial.MaterialType.Crystal, 0x8cf4e2, 0xffffff, 0x1b7b6b);
         setMaterialForOreDict(itemMaterial,"gemDiamond",1);
         setMaterialForOreDict(itemMaterial, "blockDiamond",9);
 

@@ -3,6 +3,7 @@ package com.shadowking97.forgecraft.capabilities;
 import com.shadowking97.forgecraft.client.models.DynamicModelBiped;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.INBTSerializable;
 
 
@@ -21,12 +22,14 @@ public interface IArmorCapability extends INBTSerializable<NBTTagCompound> {
 
     double getDamageReduction();
     double getToughness();
+    int getMaterialAmount();
 
     void invalidate();
 
     void setParent(IArmorCapability parent);
 
     void damageItem(int numDamage);
+    void damageItem(int numDamage, DamageSource source);
 
     int getMaxDamage();
     int getDamage();

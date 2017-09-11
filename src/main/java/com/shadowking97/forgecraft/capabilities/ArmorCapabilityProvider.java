@@ -3,7 +3,6 @@ package com.shadowking97.forgecraft.capabilities;
 import com.shadowking97.forgecraft.client.models.DynamicModelBiped;
 import com.shadowking97.forgecraft.item.components.ComponentDefinition;
 import com.shadowking97.forgecraft.item.components.ComponentGenerator;
-import com.shadowking97.forgecraft.item.components.ItemComponent;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import com.shadowking97.forgecraft.item.material.MaterialStore;
 import net.minecraft.client.model.ModelBiped;
@@ -11,6 +10,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.*;
 
@@ -73,7 +73,9 @@ public class ArmorCapabilityProvider{
         ItemStack colorItem = null;
 
         double damageReduction=-1;
-        double toughness = -1;
+        double toughness=-1;
+        int materialAmount = -1;
+
         int damage = -1;
         int maxDamage = -1;
 
@@ -172,7 +174,9 @@ public class ArmorCapabilityProvider{
 
             if(componentDefinition!=null&&componentMaterial!=null)
             {
-                damageReduction = (componentMaterial.getStrength()*componentDefinition.getMaterialAmount())/100.0;
+                int d = Math.min(10,componentMaterial.getStrength());
+
+                damageReduction = (d*componentDefinition.getMaterialAmount())/100.0;
             }
 
             if(subComponents!=null)
@@ -189,7 +193,48 @@ public class ArmorCapabilityProvider{
 
         @Override
         public double getToughness() {
-            //TODO: Figure out toughness
+            if(toughness!=-1)return toughness;
+
+            toughness=0;
+
+            if(componentDefinition!=null&&componentMaterial!=null)
+            {
+                int t = componentMaterial.getStrength()-8;
+                if(t>0)
+                    toughness = (t*componentDefinition.getMaterialAmount())/100.0;
+            }
+
+            if(subComponents!=null)
+            {
+                for(ItemStack subcomp : subComponents)
+                {
+                    IArmorCapability cap = subcomp.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY,EnumFacing.WEST);
+                    toughness+=cap.getToughness();
+                }
+            }
+
+            return toughness;
+        }
+
+        @Override
+        public int getMaterialAmount() {
+            if(materialAmount!=-1)return materialAmount;
+
+            materialAmount=0;
+
+            if(componentDefinition!=null&&componentMaterial!=null)
+            {
+                materialAmount = componentDefinition.getMaterialAmount();
+            }
+
+            if(subComponents!=null)
+            {
+                for(ItemStack subcomp : subComponents)
+                {
+                    IArmorCapability cap = subcomp.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY,EnumFacing.WEST);
+                    damageReduction+=cap.getMaterialAmount();
+                }
+            }
             return 0;
         }
 
@@ -198,8 +243,9 @@ public class ArmorCapabilityProvider{
          */
         @Override
         public void invalidate() {
-            toughness=-1;
+            materialAmount =-1;
             damageReduction=-1;
+            toughness=-1;
             needsRemodel=true;
             maxDamage=-1;
             damage=-1;
@@ -310,6 +356,34 @@ public class ArmorCapabilityProvider{
          */
         @Override
         public void damageItem(int numDamage) {
+            if(subComponents!=null)
+            {
+                int numComponents = subComponents.size();
+
+                while(numDamage>0||this.getDamage()>=this.getMaxDamage())
+                {
+                    ItemStack component = subComponents.get(r.nextInt(numComponents));
+
+                    if(component.getItemDamage()<component.getMaxDamage())
+                    {
+                        int toDamage = Math.min(numDamage,component.getMaxDamage()-component.getItemDamage());
+                        component.setItemDamage(component.getItemDamage()+toDamage);
+
+                        if(component.getItemDamage()>=component.getMaxDamage())invalidate();
+
+                        numDamage-=toDamage;
+                        damage+=toDamage;
+                    }
+                }
+            }
+        }
+
+        /***
+         * Should only be called on top level armor. Used to damage component itemstacks.
+         * @param numDamage
+         */
+        @Override
+        public void damageItem(int numDamage, DamageSource source) {
             if(subComponents!=null)
             {
                 int numComponents = subComponents.size();

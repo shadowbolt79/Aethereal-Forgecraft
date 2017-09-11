@@ -11,12 +11,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import java.util.UUID;
@@ -24,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by Shadow Bolt on 8/15/2017.
  */
-public class ItemBaseArmor extends ItemArmor implements ItemModelProvider{
+public class ItemBaseArmor extends ItemArmor implements ItemModelProvider, ISpecialArmor{
     protected String name;
 
     public ItemBaseArmor(String name, EntityEquipmentSlot equipmentSlotIn) {
@@ -125,5 +128,42 @@ public class ItemBaseArmor extends ItemArmor implements ItemModelProvider{
         }
 
         return multimap;
+    }
+
+    //ISpecialArmor properties
+
+    @Override
+    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+
+        IArmorCapability capability = armor.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY, EnumFacing.WEST);
+
+        if(capability!=null) {
+            double drModified = capability.getDamageReduction();
+            drModified = Math.max(drModified/5,drModified - (damage/(2+(capability.getToughness()/4))))/25D;
+
+            return new ArmorProperties(capability.getMaterialAmount(),drModified, (int) (capability.getMaterialAmount()*(drModified)));
+        }
+
+        return new ArmorProperties(0, ((ItemArmor)armor.getItem()).damageReduceAmount / 25D, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+        IArmorCapability capability = armor.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY, EnumFacing.WEST);
+
+        if(capability!=null) {
+            return (int) capability.getDamageReduction();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+        IArmorCapability capability = stack.getCapability(ArmorCapabilityProvider.ARMOR_CAPABILITY, EnumFacing.WEST);
+
+        if(capability!=null) {
+            capability.damageItem(damage, source);
+        }
     }
 }
