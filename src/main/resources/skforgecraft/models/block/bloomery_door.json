@@ -1,0 +1,26 @@
+{
+  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+  "textures": {
+    "particle": "skforgecraft:blocks/bloomery_sides",
+    "0": "skforgecraft:blocks/bloomery_base",
+    "1": "skforgecraft:blocks/bloomery_top",
+    "2": "skforgecraft:blocks/bloomery_bottom",
+    "3": "skforgecraft:blocks/bloomery_sides_off",
+    "4": "skforgecraft:blocks/bloomery_sides"
+  },
+  "elements": [
+    {
+      "name": "Door",
+      "from": [ 3.0, 8.0, 13.0 ],
+      "to": [ 13.0, 16.0, 15.0 ],
+      "faces": {
+        "north": { "texture": "#3", "uv": [ 3.0, 0.0, 13.0, 8.0 ] },
+        "east": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+        "south": { "texture": "#3", "uv": [ 3.0, 0.0, 13.0, 8.0 ] },
+        "west": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+        "up": { "texture": "#1", "uv": [ 3.0, 2.0, 13.0, 4.0 ] },
+        "down": { "texture": "#-1", "uv": [ 0.0, 0.0, 10.0, 2.0 ] }
+      }
+    }
+  ]
+}

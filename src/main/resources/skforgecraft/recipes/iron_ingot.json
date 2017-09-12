@@ -1,0 +1,35 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    },
+    {
+      "item": "skforgecraft:nugget_iron"
+    }
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot"
+  }
+}

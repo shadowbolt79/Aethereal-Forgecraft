@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "skforgecraft:items/fur_sheet0",
+    "layer1": "skforgecraft:items/fur_sheet2",
+    "layer2": "skforgecraft:items/fur_sheet1"
+  }
+}

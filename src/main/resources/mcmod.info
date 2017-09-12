@@ -1,0 +1,16 @@
+[
+{
+  "modid": "skforgecraft",
+  "name": "Aethereal Forge",
+  "description": "Blacksmith your own weapons and armor, no magic table crafting here.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["shadowking97"],
+  "credits": ":U",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

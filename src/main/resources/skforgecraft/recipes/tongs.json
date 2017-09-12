@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "skforgecraft:tongs"
+  },
+  "pattern": [
+    "X X",
+    " X ",
+    "x x"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "X": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "x": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  }
+}

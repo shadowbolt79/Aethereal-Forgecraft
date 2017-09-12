@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "skforgecraft:items/metal_nugget0",
+    "layer1": "skforgecraft:items/metal_nugget1",
+    "layer2": "skforgecraft:items/metal_nugget2"
+  }
+}

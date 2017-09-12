@@ -1,0 +1,90 @@
+{
+  "forge_marker":1,
+  "defaults": {
+    "ambientocclusion": false,
+    "textures": {
+      "particle": "skforgecraft:blocks/bloomery_sides",
+      "0": "skforgecraft:blocks/bloomery_base",
+      "1": "skforgecraft:blocks/bloomery_top",
+      "2": "skforgecraft:blocks/bloomery_bottom",
+      "3": "skforgecraft:blocks/bloomery_sides_off",
+      "4": "skforgecraft:blocks/bloomery_sides",
+      "5": "blocks/coal_block"
+    },
+    "model": "skforgecraft:bloomery"
+  },
+  "variants": {
+
+    "burning": {
+      "true": {
+        "textures": {
+          "3": "skforgecraft:blocks/bloomery_sides_on",
+          "5": "skforgecraft:blocks/coal_burning",
+          "6": "skforgecraft:blocks/unsmelted_metal"
+        },
+        "ambientocclusion": false
+      },
+      "false": {
+      }
+    },
+
+    "facing": {
+      "north": {},
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+
+    "top": {
+      "true": {
+        "model": "skforgecraft:bloomery_top"
+      },
+      "false": {}
+    },
+
+    "open": {
+      "true": {},
+      "false": {
+        "submodel": {"door":{ "model":"skforgecraft:bloomery_door"}}
+      }
+    },
+
+    "filled":{
+      "0":{},
+      "1":{
+        "submodel":{"coal1":{"model": "skforgecraft:bloomery_coal"}
+        }
+      },
+      "2":{
+        "submodel":{
+          "coal1":{"model": "skforgecraft:bloomery_coal"},
+          "coal2":{"model": "skforgecraft:bloomery_coal2"}
+        }
+      },
+      "3":{
+        "submodel":{
+          "coal1":{"model": "skforgecraft:bloomery_coal"},
+          "coal3":{"model": "skforgecraft:bloomery_coal3"}
+        }
+      }
+    },
+    "smelting":{
+      "0":{},
+      "1":{
+        "submodel":{
+          "smelting":{"model":"skforgecraft:bloomery_smelting1"}
+        }
+      },
+      "2":{
+        "submodel":{
+          "smelting":{"model":"skforgecraft:bloomery_smelting2"}
+        }}
+    }
+  }
+}

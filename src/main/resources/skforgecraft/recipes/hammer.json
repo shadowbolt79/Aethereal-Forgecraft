@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "skforgecraft:hammer"
+  },
+  "pattern": [
+    "@#@",
+    " & "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "@": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    },
+    "&": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    }
+  }
+}

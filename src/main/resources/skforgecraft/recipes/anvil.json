@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "skforgecraft:anvil"
+  },
+  "pattern": [
+    "%#%",
+    " & "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "blockIron"
+    },
+    "@": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "&": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    }
+  }
+}

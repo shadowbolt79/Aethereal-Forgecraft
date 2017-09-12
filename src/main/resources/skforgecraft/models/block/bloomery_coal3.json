@@ -1,0 +1,34 @@
+{
+  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+  "textures": {
+    "5": "blocks/coal_block"
+  },
+  "elements": [
+    {
+      "name": "Coal3",
+      "from": [ 6.0, 31.0, 6.0 ],
+      "to": [ 10.0, 31.75, 10.0 ],
+      "shade": false,
+      "faces": {
+        "north": { "texture": "#5", "uv": [ 7.0, 9.0, 11.0, 10.0 ] },
+        "east": { "texture": "#5", "uv": [ 4.0, 5.0, 8.0, 6.0 ] },
+        "south": { "texture": "#5", "uv": [ 6.0, 8.0, 10.0, 9.0 ] },
+        "west": { "texture": "#5", "uv": [ 9.0, 5.0, 13.0, 6.0 ] },
+        "up": { "texture": "#5", "uv": [ 6.0, 5.0, 10.0, 9.0 ] }
+      }
+    },
+    {
+      "name": "Coal3",
+      "from": [ 6.600000008940697, 31.75, 6.900000013411045 ],
+      "to": [ 9.600000008940697, 32, 9.900000013411045 ],
+      "shade": false,
+      "faces": {
+        "north": { "texture": "#5", "uv": [ 7.0, 9.0, 10.0, 10.0 ] },
+        "east": { "texture": "#5", "uv": [ 4.0, 5.0, 7.0, 6.0 ] },
+        "south": { "texture": "#5", "uv": [ 6.0, 8.0, 9.0, 9.0 ] },
+        "west": { "texture": "#5", "uv": [ 9.0, 5.0, 12.0, 6.0 ] },
+        "up": { "texture": "#5", "uv": [ 6.0, 5.0, 9.0, 8.0 ] }
+      }
+    }
+  ]
+}

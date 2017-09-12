@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "skforgecraft:fur_sheet"
+  },
+  "type": "skforgecraft:colored_item",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "dye"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    }
+  ]
+}

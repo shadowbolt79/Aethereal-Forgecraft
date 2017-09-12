@@ -1,0 +1,37 @@
+{
+  "result": {
+    "item": "skforgecraft:fur_sheet",
+    "count": 8
+  },
+  "type": "skforgecraft:colored_item",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "dye"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    },
+    {
+      "item": "skforgecraft:fur_sheet"
+    }
+  ]
+}

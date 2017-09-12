@@ -1,0 +1,5 @@
+{
+  "recipes":{
+    "colored_item": "com.shadowking97.forgecraft.item.recipeFactories.ColorizedItemFactory"
+  }
+}
