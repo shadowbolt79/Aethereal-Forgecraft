@@ -1,6 +1,6 @@
 [
 {
-  "modid": "skforgecraft",
+  "modid": "assets.skforgecraft",
   "name": "Aethereal Forge",
   "description": "Blacksmith your own weapons and armor, no magic table crafting here.",
   "version": "${version}",

@@ -78,6 +78,7 @@ public class ComponentModelRenderer extends ModelRenderer {
 
     public void finalizeTextures()
     {
+
         this.setTextureSize(MapHolder.textureMapComponents.getTextureWidth(), MapHolder.textureMapComponents.getTextureHeight());
     }
 
@@ -129,25 +130,10 @@ public class ComponentModelRenderer extends ModelRenderer {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.alphaFunc(516, 0.003921569F);
 
-        //See if this helps with the darkness on armor models
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-        GlStateManager.pushMatrix();
-
         renderQuads(bufferBuilder, model.bakeTransparent(scale));
         Tessellator.getInstance().draw();
 
-        GlStateManager.popMatrix();
-
-        //See if this helps with the darkness on armor models
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.enableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-
-        //GlStateManager.disableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
+        GlStateManager.disableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
         GlStateManager.disableBlend();
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.depthMask(true);

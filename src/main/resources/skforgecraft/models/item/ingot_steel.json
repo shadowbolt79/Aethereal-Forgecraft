@@ -1,8 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "skforgecraft:items/metalIngot0",
-    "layer1": "skforgecraft:items/metalIngot1",
-    "layer2": "skforgecraft:items/metalIngot2"
-  }
-}

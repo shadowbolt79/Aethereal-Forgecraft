@@ -78,7 +78,7 @@ public class ItemTongs extends ItemBase {
 
     @Override
     public void registerItemModel(Item item) {
-        Forgecraft.proxy.registerItemRenderer(this,0,name+"Closed");
-        Forgecraft.proxy.registerItemRenderer(this, 1, name+"Molten");
+        Forgecraft.proxy.registerItemRenderer(this,0,name+"_closed");
+        Forgecraft.proxy.registerItemRenderer(this, 1, name+"_molten");
     }
 }

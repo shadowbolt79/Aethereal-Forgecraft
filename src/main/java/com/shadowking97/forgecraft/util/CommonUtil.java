@@ -33,6 +33,10 @@ public class CommonUtil {
     {
         LOGGER.error("Forgecraft: "+out);
     }
+    public static void warn(String out)
+    {
+        LOGGER.warn("Forgecraft: "+out);
+    }
 
     public static void error(String out, Throwable e)
     {

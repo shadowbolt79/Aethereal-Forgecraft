@@ -11,7 +11,6 @@ import com.shadowking97.forgecraft.client.TESRAnvil;
 import com.shadowking97.forgecraft.events.ClientEventListeners;
 import com.shadowking97.forgecraft.item.ItemBaseColorable;
 import com.shadowking97.forgecraft.tiles.TileAnvil;
-import com.shadowking97.forgecraft.util.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -20,6 +19,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Level;
 
 public class ClientProxy extends CommonProxy {
 
@@ -48,12 +49,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         try {
-            CommonUtil.info("Creating Component Texture Map");
-            MapHolder.textureMapComponents = new ComponentTextureMap("textures", true);
+            FMLLog.log(Level.INFO,"Creating Component Texture Map");
+            MapHolder.textureMapComponents = new ComponentTextureMap("textures");
 
             MapHolder.textureMapComponents.setMipmapLevels(Minecraft.getMinecraft().gameSettings.mipmapLevels);
         }catch (Exception e){
-            CommonUtil.fatal("UNABLE TO GET TEXTURE SPRITE",e);
+            FMLLog.log(Level.FATAL,e,"FORGECRAFT: UNABLE TO GET TEXTURE SPRITE");
         }
         super.init();
         if(MapHolder.textureMapComponents!=null) {

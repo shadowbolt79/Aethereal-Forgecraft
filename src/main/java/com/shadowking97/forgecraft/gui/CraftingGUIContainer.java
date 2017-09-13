@@ -33,9 +33,9 @@ public class CraftingGUIContainer extends GuiScreen {
     private GuiScrollableList<ComponentDefinition> guiScrollableList;
 
     private ArrayList<ComponentDefinition> temp;
-    private ComponentModelRenderer tempModel = ComponentGenerator.INSTANCE.getComponent("metalCap").getMaterialModel(MaterialStore.INSTANCE.getMaterialByName("Iron"));
+    private ComponentModelRenderer tempModel = ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm").getMaterialModel(MaterialStore.INSTANCE.getMaterialByName("Iron"));
 
-    private static final ResourceLocation CRAFTING_GUI_TEXTURES = new ResourceLocation("skforgecraft","textures/gui/craftinggui.png");
+    private static final ResourceLocation CRAFTING_GUI_TEXTURES = new ResourceLocation("skforgecraft","textures/gui/crafting_gui.png");
 
 
     //IF componentItem == null
@@ -338,20 +338,20 @@ public class CraftingGUIContainer extends GuiScreen {
 
         if(temp==null){
             temp=new ArrayList<>();
-            if(ComponentGenerator.INSTANCE.getComponent("metalCap")==null)
+            if(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm")==null)
                 System.out.println("AAAAAAAA");
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
-            temp.add(ComponentGenerator.INSTANCE.getComponent("metalCap"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
+            temp.add(ComponentGenerator.INSTANCE.getComponent("Nordic Carved Helm"));
         }
 
         guiScrollableList.setList(temp);

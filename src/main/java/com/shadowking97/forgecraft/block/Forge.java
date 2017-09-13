@@ -31,7 +31,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -83,7 +82,10 @@ public class Forge extends BlockContainerBase<TileForge> {
      * Responsible for interacting with forge for creating materials and the such
      * @return
      */
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (state.getBlock() != this)
             return false;
 
@@ -93,6 +95,8 @@ public class Forge extends BlockContainerBase<TileForge> {
         if((p&1)==1)pos2=pos2.south();
         if((p&2)==2)pos2=pos2.east();
         IBlockState state2 = getActualState(worldIn.getBlockState(pos2),worldIn,pos2);
+
+        ItemStack heldItem = playerIn.getHeldItem(hand);
 
         if(state2.getValue(BURNING)) {
             if (heldItem != null) {
