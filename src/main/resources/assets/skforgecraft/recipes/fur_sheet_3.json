@@ -10,13 +10,16 @@
       "ore": "dye"
     },
     {
-      "item": "skforgecraft:fur_sheet"
+      "item": "skforgecraft:fur_sheet",
+      "data": 32767
     },
     {
-      "item": "skforgecraft:fur_sheet"
+      "item": "skforgecraft:fur_sheet",
+      "data": 32767
     },
     {
-      "item": "skforgecraft:fur_sheet"
+      "item": "skforgecraft:fur_sheet",
+      "data": 32767
     }
   ]
 }

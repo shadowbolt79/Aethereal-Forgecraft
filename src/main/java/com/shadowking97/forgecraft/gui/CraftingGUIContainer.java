@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -71,9 +72,6 @@ public class CraftingGUIContainer extends GuiScreen {
     }
 
     int maxTabOffset = -1;
-    int maxScrollOffset = -1;
-
-    int scrollbarMin, scrollbarMax;
 
     public int maxTabOffset()
     {
@@ -107,7 +105,38 @@ public class CraftingGUIContainer extends GuiScreen {
     Object selectedObject;
     int mouseX, mouseY;
 
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        int wheel = Mouse.getDWheel();
 
+        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;;
+
+        if(wheel!=0)scroll(-wheel,x,y);
+    }
+
+    public void scroll(int wheel, int x, int y)
+    {
+        if (guiScrollableList.inBoundries(x, y)) {
+            selectedObject = guiScrollableList;
+
+            if (guiScrollableList.visible) {
+                guiScrollableList.scroll(wheel);
+                return;
+            }
+        }
+        if (x < (width >> 1) && y < 36){
+            if(wheel>0&&tabOffset<maxTabOffset){
+                tabOffset+=wheel/100;
+                tabOffset=Math.min(tabOffset,maxTabOffset);
+            }
+            else if(wheel<0&&tabOffset>0){
+                tabOffset+=wheel/100;
+                tabOffset=Math.max(tabOffset,0);
+            }
+        }
+    }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {

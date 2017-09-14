@@ -75,7 +75,7 @@ public class GuiScrollableList<T> extends Gui {
                 GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-                if(hovered) {
+                if(hovered||selectedButton==this) {
                     drawTexturedImage(this.x, this.y, hX, hY, this.width, this.height);
                 }
                 else
@@ -86,16 +86,21 @@ public class GuiScrollableList<T> extends Gui {
 
     public class ScrollbarNub extends GuiImageButton
     {
-
-
         public ScrollbarNub(int buttonId, int x, int y, int unhighlightX, int unhighlightY, int highlightX, int highlightY) {
             super(buttonId, x, y, unhighlightX, unhighlightY, highlightX, highlightY, 7, 3);
         }
 
         public void drawButton(Minecraft mc, int mouseX, int mouseY, int scrollbarOffset, float partialTicks) {
-            yPosition+=scrollbarOffset;
+            this.y+=scrollbarOffset;
             super.drawButton(mc,mouseX,mouseY,partialTicks);
-            yPosition-=scrollbarOffset;
+            this.y-=scrollbarOffset;
+        }
+
+        public boolean isMouseOver(int offset) {
+            this.y+=offset;
+            boolean b = super.isMouseOver();
+            this.y-=offset;
+            return b;
         }
     }
 
@@ -114,6 +119,8 @@ public class GuiScrollableList<T> extends Gui {
 
     public boolean visible = true;
 
+    int scrollbarMinY, scrollbarMaxY;
+
     public GuiScrollableList(int xPos, int yPos, int width, int height, @NotNull stringTransformer<T> transformer, HoverDelegate hoverDelegate, SelectedDelegate<T> selectedDelegate, ResourceLocation textures)
     {
         this.xPosition=xPos;
@@ -129,6 +136,9 @@ public class GuiScrollableList<T> extends Gui {
         this.scrollUp = new GuiImageButton(i++,xPos+width-25,yPos,52,9,68,9, 9,7);
         this.scrollDown = new GuiImageButton(i++,xPos+width-25,yPos+this.height-7,52,16,68,16, 9,7);
         this.scrollbarNub = new ScrollbarNub(i++, scrollUp.x+1,scrollUp.y+7,36,7,84,7);
+
+        scrollbarMaxY = scrollDown.y-4;
+        scrollbarMinY = scrollUp.y+8;
     }
 
     public void setList(ArrayList<T> elements)
@@ -187,11 +197,16 @@ public class GuiScrollableList<T> extends Gui {
         return true;
     }
 
+    GuiImageButton selectedButton;
+
     public void mouseClicked(int mouseX, int mouseY, int clickedMouseButton)
     {
         if(visible)
         {
-
+            if(scrollbarNub.isMouseOver(scrollbarOffset()))
+            {
+                selectedButton=scrollbarNub;
+            }
         }
     }
 
@@ -199,20 +214,42 @@ public class GuiScrollableList<T> extends Gui {
     {
         if(visible)
         {
-
+            selectedButton=null;
         }
     }
 
     public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if(visible)
         {
-
+            if(selectedButton==scrollbarNub)
+            {
+                setScrollbarOffset(mouseY);
+            }
         }
     }
 
-    private int scrollbarOffset(int minY, int maxY)
+    public void scroll(int wheel)
     {
-        return (int)Math.floor((maxY-minY)*(((float)listOffset)/maxOffset));
+        if(wheel>0&&listOffset<maxOffset){
+            listOffset+=wheel>>4;
+            listOffset=Math.min(listOffset,maxOffset);
+        }
+        else if(wheel<0&&listOffset>0){
+            listOffset+=wheel>>4;
+            listOffset=Math.max(listOffset,0);
+        }
+    }
+
+    private int scrollbarOffset()
+    {
+        return (int)Math.floor((scrollbarMaxY-scrollbarMinY)*(((float)listOffset)/maxOffset));
+    }
+
+    private void setScrollbarOffset(int yPosition)
+    {
+        listOffset = ((yPosition-scrollbarMinY)*maxOffset)/(scrollbarMaxY-scrollbarMinY);
+        listOffset = Math.min(maxOffset,listOffset);
+        listOffset = Math.max(0,listOffset);
     }
 
     public void draw(int mouseX, int mouseY, float partialTicks)
@@ -266,7 +303,7 @@ public class GuiScrollableList<T> extends Gui {
                     drawTexturedImage(x,y,63,3,3,8);
                 }
 
-                scrollbarNub.drawButton(this.mc,mouseX,mouseY,scrollbarOffset(scrollUp.x+3,maxY+5));
+                scrollbarNub.drawButton(this.mc,mouseX,mouseY,scrollbarOffset(),partialTicks);
             }
 
             clearScissor();
