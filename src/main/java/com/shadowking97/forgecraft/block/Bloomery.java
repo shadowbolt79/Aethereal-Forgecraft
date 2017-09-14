@@ -94,7 +94,8 @@ public class Bloomery extends BlockContainerBase<TileBloomery> {
     /**
      * Responsible for putting items into the bloomery, igniting it, and extinguishing it
      */
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(state.getBlock()!=this)
             return false;
 
@@ -103,6 +104,8 @@ public class Bloomery extends BlockContainerBase<TileBloomery> {
         if(state.getValue(TOPPART))
             pos2=pos.down();
         IBlockState state2 = getActualState(worldIn.getBlockState(pos2),worldIn,pos2);
+
+        ItemStack heldItem = playerIn.getHeldItem(hand);
 
         if(state2.getValue(BURNING)) {
             if (heldItem != null) {
@@ -147,7 +150,7 @@ public class Bloomery extends BlockContainerBase<TileBloomery> {
                         else
                         {
                             if(!playerIn.isCreative())
-                                Items.FLINT_AND_STEEL.setDamage(heldItem,heldItem.getItemDamage()+1);
+                                heldItem.damageItem(1,playerIn);
 
                             if(getTileEntity(worldIn,pos2.up()).ignite())
                                 worldIn.setBlockState(pos2, state2.withProperty(BURNING, true));
