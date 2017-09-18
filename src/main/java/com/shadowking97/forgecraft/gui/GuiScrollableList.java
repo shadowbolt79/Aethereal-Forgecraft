@@ -207,6 +207,25 @@ public class GuiScrollableList<T> extends Gui {
             {
                 selectedButton=scrollbarNub;
             }
+            else
+            {
+                int i = 0;
+                if (mouseX >= xPosition + 5 && mouseX < xPosition + width - 16) {
+                    for (T element : elements) {
+                        if ((i << 4) - listOffset + yPosition < -15) continue;
+
+                        if ((i << 4) - listOffset > height) ;
+
+                        int y = (i << 4) - listOffset + yPosition;
+
+                        if (mouseY >= y && mouseY < y + 16) {
+                            if (selectedDelegate != null) selectedDelegate.onSelected(element);
+                            break;
+                        }
+                        ++i;
+                    }
+                }
+            }
         }
     }
 
@@ -256,35 +275,32 @@ public class GuiScrollableList<T> extends Gui {
     {
         if(visible) {
             doScissor();
-            if(elements!=null)
-            {
+            if(elements!=null) {
                 int i = 0;
-                for(T element: elements)
-                {
-                    if((i<<4)-listOffset+yPosition<-15)continue;
+                    for (T element : elements) {
+                        if ((i << 4) - listOffset + yPosition < -15) continue;
 
-                    if((i<<4)-listOffset>height);
+                        if ((i << 4) - listOffset > height) break;
 
-                    int y = (i<<4)-listOffset+yPosition;
+                        int y = (i << 4) - listOffset + yPosition;
 
-                    if(mouseY>=y&&mouseY<y+16)
-                    {
-                        if(mouseX>=xPosition+5&&mouseX<xPosition+width-16)
-                        {
-                            this.drawGradientRect(xPosition, y, xPosition+this.width-20, y+16, -1072689136, -804253680);
+                        if (mouseX >= xPosition + 5 && mouseX < xPosition + width - 16) {
+                            if (mouseY >= y && mouseY < y + 16) {
 
-                            this.drawHorizontalLine(xPosition,xPosition+this.width-20,y,0x77ffffff);
-                            this.drawHorizontalLine(xPosition,xPosition+this.width-20,y+16,0x77ffffff);
-                            this.drawVerticalLine(xPosition,y,y+16,0x77ffffff);
+                                this.drawGradientRect(xPosition, y, xPosition + this.width - 20, y + 16, -1072689136, -804253680);
 
-                            if(hoverDelegate!=null)hoverDelegate.onHover(element);
+                                this.drawHorizontalLine(xPosition, xPosition + this.width - 20, y, 0x77ffffff);
+                                this.drawHorizontalLine(xPosition, xPosition + this.width - 20, y + 16, 0x77ffffff);
+                                this.drawVerticalLine(xPosition, y, y + 16, 0x77ffffff);
+
+                                if (hoverDelegate != null) hoverDelegate.onHover(element);
+                            }
+
                         }
-                    }
+                        String s = transformer.transform(element);
+                        drawString(mc.fontRenderer, s, xPosition + 3, y + 5, 14737632);
 
-                    String s = transformer.transform(element);
-                    drawString(mc.fontRenderer,s,xPosition+3,y+5,14737632);
-
-                    ++i;
+                        ++i;
                 }
             }
 

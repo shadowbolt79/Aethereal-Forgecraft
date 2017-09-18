@@ -6,6 +6,7 @@ import com.shadowking97.forgecraft.item.components.ComponentDefinition;
 import com.shadowking97.forgecraft.item.components.ComponentGenerator;
 import com.shadowking97.forgecraft.item.material.ItemMaterial;
 import com.shadowking97.forgecraft.item.material.MaterialStore;
+import com.shadowking97.forgecraft.util.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -361,9 +362,11 @@ public class CraftingGUIContainer extends GuiScreen {
         int i = 0;
         int k = 0;
 
-        guiScrollableList = new GuiScrollableList<>(25,48,(width>>1)-28,((height>>2)*3)-51,
-                (ComponentDefinition o)-> o.getName(),
-                null, null, CRAFTING_GUI_TEXTURES);
+        guiScrollableList = new GuiScrollableList<>(25, 48, (width >> 1) - 28, ((height >> 2) * 3) - 51,
+                (ComponentDefinition o) -> o.getName(), //String transformer
+                (GuiScrollableList.HoverDelegate<ComponentDefinition>) hovered -> tempModel = hovered.getMaterialModel(MaterialStore.INSTANCE.getMaterialByName("Iron")),
+                selected -> CommonUtil.info("Clicked Element: "+selected.getName()),
+                CRAFTING_GUI_TEXTURES);
 
         if(temp==null){
             temp=new ArrayList<>();
